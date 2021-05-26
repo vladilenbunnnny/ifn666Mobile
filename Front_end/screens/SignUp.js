@@ -2,30 +2,28 @@ import React, { useContext } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 
-function SignIn({ navigation }) {
+function SignUp({ navigation }) {
   //   const { signIn } = useContext(AuthContext);
-
+  const handleSubmit = "";
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 20 }}>Sign In Screen</Text>
+      <Text style={{ fontSize: 20 }}>Create you account</Text>
 
-      <Text style={{ fontSize: 20, paddingTop: 30 }}>
-        Is Amina smoking again?
-      </Text>
+      <Text style={{ fontSize: 20, paddingTop: 30 }}>Sign Up form Here</Text>
       <Button
-        title="Create Account"
-        onPress={() => navigation.push("CreateAccount")}
+        title="Submit"
+        // onPress={handleSubmit}
       />
     </View>
   );
 }
 
-export default SignIn;
+export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#999999",
     alignItems: "center",
     justifyContent: "center",
   },

@@ -1,16 +1,19 @@
 import * as React from "react";
 import { StyleSheet, Text, View, useColorScheme, Button } from "react-native";
 
-function HomeScreen({ navigation }) {
+function WatchList({ navigation }) {
+  function handleSubmit() {
+    alert("Button pressed");
+  }
   return (
     <View style={styles.container}>
-      <Text>Home Screen to be done</Text>
-      <Button title="Sign In" onPress={() => navigation.navigate("SignIn")} />
+      <Text>Watch List to be created</Text>
+      <Button title="Submit" onPress={handleSubmit} />
     </View>
   );
 }
 
-export default HomeScreen;
+export default WatchList;
 
 const styles = StyleSheet.create({
   container: {
