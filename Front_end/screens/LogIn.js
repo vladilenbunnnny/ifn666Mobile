@@ -1,5 +1,6 @@
 import * as React from "react";
-import { StyleSheet, Text, View, useColorScheme, Button } from "react-native";
+import { StyleSheet, Text, View, useColorScheme } from "react-native";
+import { Input, Button } from "react-native-elements";
 
 function LogIn({ navigation }) {
   function handleSubmit() {
@@ -8,11 +9,24 @@ function LogIn({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text>Log In form to be created</Text>
-      <Button title="Submit" onPress={handleSubmit} />
+      <Text style={styles.titleText}>Log In</Text>
+
+      <Input
+        containerStyle={styles.inputFields}
+        // errorMessage="ENTER A VALID ERROR HERE"
+        placeholder="Email"
+      />
+      <Input
+        containerStyle={styles.inputFields}
+        placeholder="Password"
+        secureTextEntry={true}
+      />
+
+      <Button title="Submit" type="clear" onPress={handleSubmit} />
       <Text>Need an account?</Text>
       <Button
         title="Create account"
+        type="clear"
         onPress={() => navigation.navigate("Sign Up")}
       />
     </View>
@@ -26,6 +40,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#999999",
+    backgroundColor: "white",
+  },
+  inputFields: {
+    maxWidth: "85%",
+  },
+  titleText: {
+    fontSize: 30,
+    paddingBottom: 20,
   },
 });

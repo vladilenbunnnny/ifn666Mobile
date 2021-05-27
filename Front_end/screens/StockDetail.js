@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { Text } from "react-native-elements";
+import { View, StyleSheet, Dimensions } from "react-native";
+import { Text, Button } from "react-native-elements";
+import { LineChart } from "react-native-chart-kit";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faStar as farFaStar } from "@fortawesome/free-solid-svg-icons";
 
 function StockDetail({ route, navigation }) {
   const [date, setDate] = useState("");
@@ -8,6 +11,14 @@ function StockDetail({ route, navigation }) {
   const [close, setClose] = useState("");
   const [low, setLow] = useState("");
   const [high, setHigh] = useState("");
+
+  //Variables for the chart X and Y axes
+  const labelsChart = Object.values(date)
+    .slice(0, 14)
+    .map(d => d.slice(-2))
+    .reverse();
+  const prices = Object.values(close).slice(0, 14);
+  const prices2 = [1, 2, 4, 100, 2, 4, 566, 3, 4, 5, 756, 4, 5.4567, 2.34];
 
   const { symbol } = route.params;
 
@@ -39,21 +50,75 @@ function StockDetail({ route, navigation }) {
   }, []);
   return (
     <View style={styles.container}>
-      <Text h1>Details for {symbol}</Text>
-      <Text h2>on {date[0]}</Text>
-      <Text h4>
-        The open price is <Text h3>{Number(open[0]).toFixed(2)} $</Text>
-      </Text>
-      <Text h4>
-        The close price is <Text h3>{Number(close[0]).toFixed(2)} $</Text>
-      </Text>
-      <Text h4>
-        The low price is <Text h3>{Number(low[0]).toFixed(2)} $</Text>
-      </Text>
-      <Text h4>
-        The high price is
-        <Text h3> {Number(high[0]).toFixed(2)} $</Text>
-      </Text>
+      <View style={styles.containerText}>
+        <Text style={styles.detailsText} h1>
+          Details for {symbol}
+        </Text>
+        <Text h2>on {date[0]}</Text>
+        <Text h4>
+          The open price is <Text h3>{Number(open[0]).toFixed(2)} $</Text>
+        </Text>
+        <Text h4>
+          The close price is <Text h3>{Number(close[0]).toFixed(2)} $</Text>
+        </Text>
+        <Text h4>
+          The low price is <Text h3>{Number(low[0]).toFixed(2)} $</Text>
+        </Text>
+        <Text h4>
+          The high price is
+          <Text h3> {Number(high[0]).toFixed(2)} $</Text>
+        </Text>
+      </View>
+
+      {/* Chart */}
+
+      <View style={styles.containerChart}>
+        <Text style={styles.chartText} h1>
+          Price history for the last 14 days
+        </Text>
+        <LineChart
+          data={{
+            labels: labelsChart,
+            datasets: [
+              {
+                data: prices,
+              },
+            ],
+          }}
+          width={Dimensions.get("window").width} // from react-native
+          height={220}
+          chartConfig={{
+            backgroundColor: "#e26a00",
+            backgroundGradientFrom: "#fb8c00",
+            backgroundGradientTo: "#ffa726",
+            // decimalPlaces: 2, // optional, defaults to 2dp
+            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            style: {
+              borderRadius: 16,
+            },
+          }}
+          bezier
+          style={{
+            marginVertical: 8,
+            borderRadius: 16,
+          }}
+        />
+        <View style={{ flex: 1 }}>
+          <Button
+            style={styles.button}
+            title="Add to WatchList"
+            type="outline"
+            icon={
+              <FontAwesomeIcon
+                icon={farFaStar}
+                color={"#6CB4EE"}
+                size={15}
+                transform="left-1"
+              />
+            }
+          />
+        </View>
+      </View>
     </View>
   );
 }
@@ -62,9 +127,30 @@ export default StockDetail;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#999999",
-    alignItems: "center",
+    backgroundColor: "white",
+    alignItems: "flex-start",
     justifyContent: "flex-start",
-    paddingTop: 100,
+    paddingTop: 50,
+    color: "red",
+  },
+  containerChart: {
+    paddingTop: 50,
+    flex: 1,
+
+    alignItems: "flex-start",
+  },
+  chartText: {
+    // textAlign: "center",
+    color: "#696969",
+    fontFamily: "Arial",
+    paddingLeft: 15,
+  },
+  containerText: {
+    paddingLeft: 15,
+  },
+  button: {
+    paddingTop: 10,
+    paddingLeft: "10%",
+    minWidth: "90%",
   },
 });

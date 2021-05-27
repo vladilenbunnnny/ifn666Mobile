@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View, useColorScheme, Button } from "react-native";
 import {
@@ -15,7 +14,7 @@ import LogIn from "./screens/LogIn";
 import StockDetail from "./screens/StockDetail";
 
 const Stack = createStackNavigator();
-const isLoggedIn = true;
+const isLoggedIn = false;
 
 export default function App() {
   const scheme = useColorScheme();
