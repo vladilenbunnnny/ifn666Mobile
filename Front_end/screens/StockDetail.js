@@ -6,11 +6,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar as farFaStar } from "@fortawesome/free-solid-svg-icons";
 
 function StockDetail({ route, navigation }) {
+  // TODO: combine this state in one
   const [date, setDate] = useState("");
   const [open, setOpen] = useState("");
   const [close, setClose] = useState("");
   const [low, setLow] = useState("");
   const [high, setHigh] = useState("");
+  const [isLoading, setLoading] = useState(true);
 
   //Variables for the chart X and Y axes
   const labelsChart = Object.values(date)
@@ -18,7 +20,6 @@ function StockDetail({ route, navigation }) {
     .map(d => d.slice(-2))
     .reverse();
   const prices = Object.values(close).slice(0, 14);
-  const prices2 = [1, 2, 4, 100, 2, 4, 566, 3, 4, 5, 756, 4, 5.4567, 2.34];
 
   const { symbol } = route.params;
 
@@ -46,8 +47,10 @@ function StockDetail({ route, navigation }) {
         } else {
           console.error("Unable to send a request");
         }
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.containerText}>
@@ -71,54 +74,57 @@ function StockDetail({ route, navigation }) {
       </View>
 
       {/* Chart */}
-
-      <View style={styles.containerChart}>
-        <Text style={styles.chartText} h1>
-          Price history for the last 14 days
-        </Text>
-        <LineChart
-          data={{
-            labels: labelsChart,
-            datasets: [
-              {
-                data: prices,
+      {isLoading ? (
+        <Text>Spinner...</Text>
+      ) : (
+        <View style={styles.containerChart}>
+          <Text style={styles.chartText} h1>
+            Price history for the last 14 days
+          </Text>
+          <LineChart
+            data={{
+              labels: labelsChart,
+              datasets: [
+                {
+                  data: prices,
+                },
+              ],
+            }}
+            width={Dimensions.get("window").width} // from react-native
+            height={220}
+            chartConfig={{
+              backgroundColor: "#e26a00",
+              backgroundGradientFrom: "#fb8c00",
+              backgroundGradientTo: "#ffa726",
+              // decimalPlaces: 2, // optional, defaults to 2dp
+              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              style: {
+                borderRadius: 16,
               },
-            ],
-          }}
-          width={Dimensions.get("window").width} // from react-native
-          height={220}
-          chartConfig={{
-            backgroundColor: "#e26a00",
-            backgroundGradientFrom: "#fb8c00",
-            backgroundGradientTo: "#ffa726",
-            // decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
+            }}
+            bezier
+            style={{
+              marginVertical: 8,
               borderRadius: 16,
-            },
-          }}
-          bezier
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-          }}
-        />
-        <View style={{ flex: 1 }}>
-          <Button
-            style={styles.button}
-            title="Add to WatchList"
-            type="outline"
-            icon={
-              <FontAwesomeIcon
-                icon={farFaStar}
-                color={"#6CB4EE"}
-                size={15}
-                transform="left-1"
-              />
-            }
+            }}
           />
+          <View style={{ flex: 1 }}>
+            <Button
+              style={styles.button}
+              title="Add to WatchList"
+              type="outline"
+              icon={
+                <FontAwesomeIcon
+                  icon={farFaStar}
+                  color={"#6CB4EE"}
+                  size={15}
+                  transform="left-1"
+                />
+              }
+            />
+          </View>
         </View>
-      </View>
+      )}
     </View>
   );
 }
