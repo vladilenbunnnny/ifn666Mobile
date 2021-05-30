@@ -9,6 +9,8 @@ function LogIn({ navigation }) {
   const [data, setData] = useState({
     userEmail: "",
     password: "",
+    isValidUser: true,
+    isValidPassword: true,
   });
   const { logIn } = useContext(AuthContext);
 
@@ -32,22 +34,62 @@ function LogIn({ navigation }) {
   };
   //<Handle all submits/> END
 
+  //<Handle input validation> START
+  const handleValidUser = val => {
+    if (val.length < 1) {
+      setData({
+        ...data,
+        isValidUser: false,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidUser: true,
+      });
+    }
+  };
+
+  const handleValidPassword = val => {
+    if (val.trim().length < 1) {
+      setData({
+        ...data,
+        isValidPassword: false,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidPassword: true,
+      });
+    }
+  };
+
+  //<Handle input validation> END
+
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Log In</Text>
 
       <Input
         containerStyle={styles.inputFields}
-        // errorMessage="ENTER A VALID ERROR HERE"
         placeholder="Email"
         onChangeText={val => handleEmailChange(val)}
+        onEndEditing={e => handleValidUser(e.nativeEvent.text)}
       />
+      {/* Contiionatl statement for error message */}
+      {!data.isValidUser && (
+        <Text style={styles.errorMsg1}>Email can't be empty</Text>
+      )}
       <Input
         containerStyle={styles.inputFields}
         placeholder="Password"
         onChangeText={val => handlePasswordChange(val)}
+        onEndEditing={e => handleValidPassword(e.nativeEvent.text)}
         secureTextEntry={true}
       />
+      {/* Contiionatl statement for error message */}
+      {!data.isValidPassword && (
+        <Text style={styles.errorMsg2}>Password can't be empty</Text>
+      )}
 
       <Button
         title="Submit"
@@ -79,5 +121,15 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 30,
     paddingBottom: 20,
+  },
+  errorMsg1: {
+    color: "red",
+    marginTop: -15,
+    paddingRight: 195,
+  },
+  errorMsg2: {
+    color: "red",
+    marginTop: -15,
+    paddingRight: 165,
   },
 });
