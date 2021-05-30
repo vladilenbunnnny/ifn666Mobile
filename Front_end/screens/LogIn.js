@@ -36,7 +36,7 @@ function LogIn({ navigation }) {
 
   //<Handle input validation> START
   const handleValidUser = val => {
-    if (val.length < 1) {
+    if (val.trim().length < 1) {
       setData({
         ...data,
         isValidUser: false,
