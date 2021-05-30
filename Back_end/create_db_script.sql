@@ -8,3 +8,11 @@ CREATE TABLE IF NOT EXISTS users (
   password VARCHAR(128) NOT NULL,
   PRIMARY KEY (id)
 );
+
+
+-- CREATE TABLE watchList(  
+--   stock_id INT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
+--   id INT NOT NULL,
+--   stock_name VARCHAR(128) NOT NULL,
+--   FOREIGN KEY (id) REFERENCES users(id)
+-- );

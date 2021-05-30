@@ -14,7 +14,7 @@ import LogIn from "./screens/LogIn";
 import StockDetail from "./screens/StockDetail";
 
 const Stack = createStackNavigator();
-const isLoggedIn = false;
+const isLoggedIn = true;
 
 export default function App() {
   const scheme = useColorScheme();
