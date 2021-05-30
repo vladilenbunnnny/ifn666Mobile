@@ -76,11 +76,25 @@ function Stocks({ navigation }) {
                 key={i}
                 onPress={() => handlePress(stock.Symbol)}
               >
-                <ListItem bottomDivider>
+                <ListItem
+                  bottomDivider
+                  containerStyle={{ backgroundColor: "rgb(40, 44, 52)" }}
+                >
                   <ListItem.Content>
-                    <ListItem.Title>{stock.Symbol}</ListItem.Title>
-                    <ListItem.Subtitle>{stock.Name}</ListItem.Subtitle>
-                    <ListItem.Subtitle>{stock.Sector}</ListItem.Subtitle>
+                    <ListItem.Title
+                      style={{
+                        color: "rgb(172, 179, 173)",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {stock.Symbol}
+                    </ListItem.Title>
+                    <ListItem.Subtitle style={{ color: "rgb(172, 179, 173)" }}>
+                      {stock.Name}
+                    </ListItem.Subtitle>
+                    <ListItem.Subtitle style={{ color: "rgb(172, 179, 173)" }}>
+                      {stock.Sector}
+                    </ListItem.Subtitle>
                   </ListItem.Content>
                 </ListItem>
               </TouchableHighlight>

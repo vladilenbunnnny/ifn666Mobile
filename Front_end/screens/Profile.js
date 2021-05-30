@@ -3,19 +3,17 @@ import { View, Text, StyleSheet, Button } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 
 function Profile({ navigation }) {
-  //   const { signIn } = useContext(AuthContext);
+  const { logOut } = useContext(AuthContext);
+
   function handleSubmit() {
-    alert("Button pressed");
+    logOut();
   }
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 20 }}>Hello, user</Text>
+      <Text style={styles.text}>Hello, user</Text>
 
-      <Text style={{ fontSize: 20, paddingTop: 30 }}>
-        To log out press the submit button
-      </Text>
-      <Button title="Submit" onPress={handleSubmit} />
+      <Button title="Log Out" onPress={() => handleSubmit()} />
     </View>
   );
 }
@@ -28,5 +26,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#999999",
     alignItems: "center",
     justifyContent: "center",
+  },
+  text: {
+    fontSize: 20,
+    paddingBottom: 30,
   },
 });

@@ -3,4 +3,4 @@
 // cmd + p
 // cmd + t -> search for a function / class /variable across files.
 // cmd + shift + o -> jump to variable / function /class inside current file.
-// cmd + f -> search text across current file.
+// cmd + f -> search text across current file.§

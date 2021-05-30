@@ -4,10 +4,11 @@ import { AuthContext } from "../contexts/AuthContext";
 import { Input, Button } from "react-native-elements";
 
 function SignUp({ navigation }) {
-  //   const { signIn } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
+
+  const { signUp } = useContext(AuthContext);
 
   const handleSubmit = async () => {
     // console.log(email, password);
@@ -44,6 +45,7 @@ function SignUp({ navigation }) {
           navigation.navigate("Log In");
         }
       })
+      .then(() => signUp())
       .catch(err => {
         alert(err);
       });
@@ -72,7 +74,7 @@ function SignUp({ navigation }) {
         placeholder="Confirm Password"
         secureTextEntry={true}
       />
-      <Button title="Create" type="clear" onPress={handleSubmit} />
+      <Button title="Create" type="clear" onPress={() => signUp()} />
     </View>
   );
 }
