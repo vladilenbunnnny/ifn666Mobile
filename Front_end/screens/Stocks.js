@@ -45,6 +45,24 @@ function Stocks({ navigation }) {
   const [search, setSearch] = useState("");
   const { stocks, filteredStocks, isLoading, error } = useStocks();
 
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   fetch(
+  //     `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${search}&apikey=process.env.STOCKS_API_KEY`
+  //   )
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       setStocks(data);
+  //       setFilteredStocks(data);
+  //     })
+  //     .catch(err => {
+  //       setError(err);
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // }, []);
+
   // const updateSearch = search => {
   //   if (search) {
   //     const newData = stocks.map(stock => {
@@ -104,7 +122,7 @@ function Stocks({ navigation }) {
           <Text>Error: {error.message}</Text>
         ) : (
           <>
-            {stocks.map(
+            {stocks.slice(1, 20).map(
               (stock, i) =>
                 stock.Name.toLowerCase().includes(search.toLowerCase()) && (
                   <TouchableHighlight

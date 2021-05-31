@@ -13,7 +13,15 @@ const Tab = createBottomTabNavigator();
 
 function BottomTabNavigator() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: "rgb(0, 147, 129)",
+        inactiveTintColor: "rgb(172, 179, 173)",
+        style: { backgroundColor: "#1B1D22" },
+        labelStyle: { fontSize: 15 },
+        labelPosition: "beside-icon",
+      }}
+    >
       <Tab.Screen
         name="Stocks"
         component={Stocks}
