@@ -14,8 +14,10 @@ import {
 
 import { SearchBar, ListItem } from "react-native-elements";
 
+//<Custom hook> START
 function useStocks() {
   const [stocks, setStocks] = useState([]);
+  const [filteredStocks, setFilteredStocks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -25,6 +27,7 @@ function useStocks() {
       .then(res => res.json())
       .then(data => {
         setStocks(data);
+        setFilteredStocks(data);
       })
       .catch(err => {
         setError(err);
@@ -34,16 +37,45 @@ function useStocks() {
       });
   }, []);
 
-  return { stocks, isLoading, error };
+  return { stocks, filteredStocks, isLoading, error };
 }
+//<Custom hook> END
 
 function Stocks({ navigation }) {
   const [search, setSearch] = useState("");
-  const { stocks, isLoading, error } = useStocks();
+  const { stocks, filteredStocks, isLoading, error } = useStocks();
 
-  const updateSearch = search => {
-    setSearch(search);
-  };
+  // const updateSearch = search => {
+  //   if (search) {
+  //     const newData = stocks.map(stock => {
+  //       stock.Symbol.filter(symbol => {
+  //         const stockData = symbol ? symbol.toUpperCase() : "".toUpperCase();
+  //         const searchData = search.toUpperCase();
+  //         return stockData.indexOf(searchData) > -1;
+  //       });
+  //     });
+  //     setSearch(search);
+  //     setFilteredStocks(newData);
+  //   } else {
+  //     setFilteredStocks(stocks);
+  //     setSearch(search);
+  //   }
+  //   console.log(stocks[0].Symbol);
+  // };aap
+
+  // const updateSearch = search => {
+  //   setSearch(search);
+  //   // const formattedQuery = search.toUpperCase();
+  //   // const stocksFormatted = stocks.map(stock => stock.Name.toUpperCase());
+  //   // console.log(formattedQuery);
+  //   // console.log(stocksFormatted);
+  //   // const data = stocksFormatted.filter(name => {
+  //   //   if (name.includes("APPLE")) {
+  //   //     return true;
+  //   //   }
+  //   //   return false;
+  //   // });
+  // };
 
   const handleSubmit = () => {
     alert("Pressed");
@@ -59,8 +91,9 @@ function Stocks({ navigation }) {
     <View>
       <TouchableWithoutFeedback onPress={handleSubmit}>
         <SearchBar
+          containerStyle={styles.search}
           placeholder="Type Here..."
-          onChangeText={updateSearch}
+          onChangeText={setSearch}
           value={search}
         />
       </TouchableWithoutFeedback>
@@ -71,34 +104,41 @@ function Stocks({ navigation }) {
           <Text>Error: {error.message}</Text>
         ) : (
           <>
-            {stocks.slice(1, 30).map((stock, i) => (
-              <TouchableHighlight
-                key={i}
-                onPress={() => handlePress(stock.Symbol)}
-              >
-                <ListItem
-                  bottomDivider
-                  containerStyle={{ backgroundColor: "rgb(40, 44, 52)" }}
-                >
-                  <ListItem.Content>
-                    <ListItem.Title
-                      style={{
-                        color: "rgb(172, 179, 173)",
-                        fontWeight: "bold",
-                      }}
+            {stocks.map(
+              (stock, i) =>
+                stock.Name.toLowerCase().includes(search.toLowerCase()) && (
+                  <TouchableHighlight
+                    key={i}
+                    onPress={() => handlePress(stock.Symbol)}
+                  >
+                    <ListItem
+                      bottomDivider
+                      containerStyle={{ backgroundColor: "rgb(40, 44, 52)" }}
                     >
-                      {stock.Symbol}
-                    </ListItem.Title>
-                    <ListItem.Subtitle style={{ color: "rgb(172, 179, 173)" }}>
-                      {stock.Name}
-                    </ListItem.Subtitle>
-                    <ListItem.Subtitle style={{ color: "rgb(172, 179, 173)" }}>
-                      {stock.Sector}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-              </TouchableHighlight>
-            ))}
+                      <ListItem.Content>
+                        <ListItem.Title
+                          style={{
+                            color: "rgb(172, 179, 173)",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {stock.Symbol}
+                        </ListItem.Title>
+                        <ListItem.Subtitle
+                          style={{ color: "rgb(172, 179, 173)" }}
+                        >
+                          {stock.Name}
+                        </ListItem.Subtitle>
+                        <ListItem.Subtitle
+                          style={{ color: "rgb(172, 179, 173)" }}
+                        >
+                          {stock.Sector}
+                        </ListItem.Subtitle>
+                      </ListItem.Content>
+                    </ListItem>
+                  </TouchableHighlight>
+                )
+            )}
           </>
         )}
       </ScrollView>
@@ -121,5 +161,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#999999",
+  },
+  search: {
+    backgroundColor: "rgb(40, 44, 52)",
   },
 });

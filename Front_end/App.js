@@ -14,6 +14,7 @@ import {
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import jwtdecode from "jwt-decode";
 
 //Local imports
 import SignUp from "./screens/SignUp";
@@ -25,6 +26,17 @@ import { AuthContext } from "./contexts/AuthContext";
 const Stack = createStackNavigator();
 // const isLoggedIn = true;
 
+const loginReducer = (prevState, action) => {
+  switch (action.type) {
+    case "LOGIN":
+      return { user: action.user, isLoading: false };
+    case "LOGOUT":
+      return { user: null, isLoading: false };
+    case "SET_LOADING":
+      return { ...prevState, isLoading: action.isLoading };
+  }
+};
+
 export default function App() {
   // const [isLoading, setIsLoading] = useState(true);
   // const [userToken, setUserToken] = useState(null);
@@ -34,107 +46,58 @@ export default function App() {
   //<Global states and reducer>
   const initialLoginState = {
     isLoading: true,
-    userEmail: null,
-    userToken: null,
+    user: null,
   };
 
-  const loginReducer = (prevState, action) => {
-    switch (action.type) {
-      case "RETRIEVE_TOKEN":
-        return {
-          ...prevState,
-          userToken: action.token,
-          isLoading: false,
-        };
-      case "LOGIN":
-        return {
-          ...prevState,
-          userEmail: action.id,
-          userToken: action.token,
-          isLoading: false,
-        };
-      case "LOGOUT":
-        return {
-          ...prevState,
-          userEmail: null,
-          userToken: null,
-          isLoading: false,
-        };
-      case "REGISTER":
-        return {
-          ...prevState,
-          userEmail: action.id,
-          userToken: action.token,
-          isLoading: false,
-        };
-    }
-  };
-
-  const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
+  const [{ isLoading, user }, dispatch] = useReducer(
+    loginReducer,
+    initialLoginState
+  );
 
   //<Global states and reducer/>
 
   const authContext = useMemo(
     () => ({
-      logIn: async (userEmail, password) => {
-        // setUserToken("token");
-        // setIsLoading(false);
-        let userToken;
-        userToken = null;
-        if (userEmail == 2 && password == 2) {
-          try {
-            userToken = "token";
-            await AsyncStorage.setItem("userToken", userToken);
-          } catch (e) {
-            alert(e);
-          }
+      logIn: async token => {
+        try {
+          await AsyncStorage.setItem("accessToken", token);
+        } catch (err) {
+          alert(err);
         }
-        dispatch({ type: "LOGIN", id: userEmail, token: userToken });
+        const { userId, email } = jwtdecode(token);
+        dispatch({ type: "LOGIN", user: { id: userId, email, token } });
       },
       logOut: async () => {
-        // setUserToken(null);
-        // setIsLoading(false);
         try {
-          await AsyncStorage.removeItem("userToken");
-        } catch (e) {
-          alert(e);
+          await AsyncStorage.removeItem("accessToken");
+        } catch (err) {
+          alert(err);
         }
         dispatch({ type: "LOGOUT" });
-      },
-      signUp: async () => {
-        // setUserToken("token");
-        // setIsLoading(false);
-        let userToken;
-        userToken = null;
-
-        try {
-          userToken = "token";
-          await AsyncStorage.setItem("userToken", userToken);
-        } catch (e) {
-          alert(e);
-        }
-
-        dispatch({ type: "REGISTER", id: userEmail, token: userToken });
       },
     }),
     []
   );
 
   useEffect(() => {
-    setTimeout(async () => {
-      let userToken;
-      userToken = null;
+    async function retrieveToken() {
       try {
-        userToken = await AsyncStorage.getItem("userToken");
-      } catch (e) {
-        alert(e);
+        let token = await AsyncStorage.getItem("accessToken");
+        const { userId, email } = jwtdecode(token);
+        dispatch({ type: "LOGIN", user: { id: userId, email, token } });
+      } catch (err) {
+        // alert(err);
+        // console.log("HERE");
+      } finally {
+        // console.log("FINALLY");
+        dispatch({ type: "SET_LOADING", isLoading: false });
       }
-      dispatch({ type: "RETRIEVE_TOKEN", token: "token" });
-    }, 2000);
+    }
+    retrieveToken();
   }, []);
 
   // While it verifies the userToken the spinner is shown
-  if (loginState.isLoading) {
+  if (isLoading) {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" />
@@ -143,10 +106,15 @@ export default function App() {
   }
 
   return (
-    <AuthContext.Provider value={authContext}>
+    <AuthContext.Provider
+      value={{
+        ...authContext,
+        user,
+      }}
+    >
       <NavigationContainer theme={scheme === "dark" ? DarkTheme : DefaultTheme}>
         {/* If logged in the bottom tab navigator is shown */}
-        {loginState.userToken !== null ? (
+        {user ? (
           <Stack.Navigator
             screenOptions={{
               headerStyle: {

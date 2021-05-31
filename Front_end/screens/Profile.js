@@ -3,17 +3,16 @@ import { View, Text, StyleSheet, Button } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 
 function Profile({ navigation }) {
-  const { logOut } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
 
-  function handleSubmit() {
-    logOut();
+  if (!user) {
+    return null;
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Hello, user</Text>
-
-      <Button title="Log Out" onPress={() => handleSubmit()} />
+      <Text style={styles.text}>Hello, {user.email}</Text>
+      <Button title="Log Out" onPress={logOut} />
     </View>
   );
 }

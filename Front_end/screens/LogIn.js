@@ -16,7 +16,26 @@ function LogIn({ navigation }) {
 
   //<Handle all submits> START
   function handleSubmit(userEmail, password) {
-    logIn(userEmail, password);
+    let status;
+    fetch("http://localhost:5000/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: userEmail, password }),
+    })
+      .then(res => {
+        status = res.status;
+        return res.json();
+      })
+      .then(data => {
+        if (String(status).match(/^[45]/)) {
+          throw new Error(data.message);
+        } else {
+          logIn(data.token);
+        }
+      })
+      .catch(alert);
   }
 
   const handleEmailChange = val => {
@@ -63,7 +82,7 @@ function LogIn({ navigation }) {
     }
   };
 
-  //<Handle input validation> END
+  //<Handle input validation/> END
 
   return (
     <View style={styles.container}>

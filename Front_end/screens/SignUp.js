@@ -8,23 +8,12 @@ function SignUp({ navigation }) {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
 
-  const { signUp } = useContext(AuthContext);
+  // const { signUp } = useContext(AuthContext);
 
   const handleSubmit = async () => {
     // console.log(email, password);
-
     // TODO: validation;
-    // axios
-    //   .post("http://localhost:5000/users", { email, password })
-    //   .then(res => {
-    //     alert("Success", JSON.stringify(data, null, 2));
-    //     navigation.navigate("Log In");
-    //   })
-    //   .catch(err => {
-    //     if (err.response) {
-    //       alert("Error", err.response.status + " " + err.response.statusText);
-    //     }
-    //   });
+
     let status;
     fetch("http://localhost:5000/users", {
       method: "POST",
@@ -41,14 +30,11 @@ function SignUp({ navigation }) {
         if (!String(status).match(/^[23]/)) {
           throw new Error(data.message);
         } else {
-          alert("Success", JSON.stringify(data, null, 2));
+          alert(`Account for ${data.email} has been successfully created!`);
           navigation.navigate("Log In");
         }
       })
-      .then(() => signUp())
-      .catch(err => {
-        alert(err);
-      });
+      .catch(alert);
   };
 
   return (
@@ -74,7 +60,7 @@ function SignUp({ navigation }) {
         placeholder="Confirm Password"
         secureTextEntry={true}
       />
-      <Button title="Create" type="clear" onPress={() => signUp()} />
+      <Button title="Create" type="clear" onPress={handleSubmit} />
     </View>
   );
 }

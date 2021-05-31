@@ -6,6 +6,7 @@ const logger = require("morgan");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
+const authRouter = require("./routes/auth");
 
 //Knex
 // const options = require("./knexfile.js");
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Router middleware
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/auth", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
