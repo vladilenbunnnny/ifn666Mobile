@@ -62,27 +62,53 @@ function StockDetail({ route, navigation }) {
       ) : (
         <View style={styles.container}>
           <View style={styles.containerText}>
-            <Text style={styles.detailsText} h1>
-              Details for {symbol}
+            <Text style={styles.detailsText} h3>
+              Price for {symbol} on
             </Text>
-            <Text h2>on {date[0]}</Text>
-            <Text h4>
-              The open price is <Text h3>{Number(open[0]).toFixed(2)} $</Text>
-            </Text>
-            <Text h4>
-              The close price is <Text h3>{Number(close[0]).toFixed(2)} $</Text>
-            </Text>
-            <Text h4>
-              The low price is <Text h3>{Number(low[0]).toFixed(2)} $</Text>
+            <Text style={styles.detailsText} h3>
+              {date[0]}
             </Text>
 
-            <Text h4>
-              The high price is
-              <Text h3> {Number(high[0]).toFixed(2)} $</Text>
-            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                paddingLeft: "10%",
+                paddingRight: "10%",
+                paddingTop: "13%",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={styles.priceText} h4>
+                Open {Number(open[0]).toFixed(2)} $
+              </Text>
+              <Text
+                style={{ paddingLeft: "20%", color: "rgb(172, 179, 173)" }}
+                h4
+              >
+                Close {Number(close[0]).toFixed(2)} $
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                paddingLeft: "10%",
+                paddingRight: "10%",
+                marginTop: "1%",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={styles.priceText} h4>
+                Low {Number(low[0]).toFixed(2)} $
+              </Text>
+              <Text style={{ color: "rgb(172, 179, 173)" }} h4>
+                High {Number(high[0]).toFixed(2)} $
+              </Text>
+            </View>
           </View>
+
           <View style={styles.containerChart}>
-            <Text style={styles.chartText} h1>
+            <Text style={styles.chartText} h3>
               Price history for the last 14 days
             </Text>
             {/* Chart */}
@@ -113,22 +139,23 @@ function StockDetail({ route, navigation }) {
                 borderRadius: 16,
               }}
             />
-            <View style={{ flex: 1 }}>
-              <Button
-                style={styles.button}
-                title="Add to WatchList"
-                type="outline"
-                icon={
-                  <FontAwesomeIcon
-                    icon={farFaStar}
-                    color={"#6CB4EE"}
-                    size={15}
-                    transform="left-1"
-                    opacity={0.85}
-                  />
-                }
-              />
-            </View>
+
+            <Button
+              style={{ alignItems: "center" }}
+              buttonStyle={styles.button1}
+              titleStyle={styles.button}
+              title="Add to WatchList"
+              type="outline"
+              icon={
+                <FontAwesomeIcon
+                  icon={farFaStar}
+                  color={"rgb(0, 147, 129)"}
+                  size={15}
+                  transform="left-1"
+                  opacity={0.85}
+                />
+              }
+            />
           </View>
         </View>
       )}
@@ -141,37 +168,43 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
     paddingTop: 50,
+    backgroundColor: "rgb(40, 44, 52)",
   },
   containerChart: {
-    paddingTop: 50,
+    paddingTop: "17%",
     flex: 1,
-
-    alignItems: "flex-start",
+    // alignItems: "center",
   },
+  detailsText: {
+    color: "rgb(172, 179, 173)",
+  },
+  priceText: {
+    color: "rgb(172, 179, 173)",
+  },
+
   chartText: {
-    // textAlign: "center",
-    color: "#696969",
+    color: "rgb(172, 179, 173)",
     fontFamily: "Arial",
-    paddingLeft: 15,
+    paddingLeft: "4%",
   },
   containerText: {
     paddingLeft: 15,
   },
-  button: {
-    paddingTop: 10,
-    paddingLeft: "10%",
-    minWidth: "90%",
-  },
+
   loadingContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
-  loadingText: {
-    color: "rgb(40, 44, 52)",
-    fontSize: 40,
+  button: {
+    color: "rgb(0, 147, 129)",
+  },
+  button1: {
+    width: "70%",
+    color: "white",
+    backgroundColor: "rgb(40, 44, 52)",
+    borderColor: "rgb(0, 147, 129)",
+    marginTop: 30,
   },
 });
