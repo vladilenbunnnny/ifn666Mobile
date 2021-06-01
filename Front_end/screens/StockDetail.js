@@ -124,11 +124,11 @@ function StockDetail({ route, navigation }) {
               width={Dimensions.get("window").width} // from react-native
               height={220}
               chartConfig={{
-                backgroundColor: "#e26a00",
-                backgroundGradientFrom: "#fb8c00",
-                backgroundGradientTo: "#ffa726",
+                backgroundColor: "black",
+                backgroundGradientFrom: "#090909",
+                backgroundGradientTo: "#191923",
                 // decimalPlaces: 2, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                color: (opacity = 1) => `rgba(202, 255, 208, ${opacity})`,
                 style: {
                   borderRadius: 16,
                 },
@@ -137,6 +137,7 @@ function StockDetail({ route, navigation }) {
               style={{
                 marginVertical: 8,
                 borderRadius: 16,
+                marginTop: "7%",
               }}
             />
 
