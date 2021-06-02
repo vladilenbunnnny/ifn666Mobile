@@ -99,9 +99,10 @@ function Stocks({ navigation }) {
     alert("Pressed");
   };
 
-  const handlePress = symbol => {
+  const handlePress = ({ symbol, company }) => {
     navigation.navigate("Stock Detail", {
       symbol,
+      company,
     });
   };
 
@@ -127,7 +128,9 @@ function Stocks({ navigation }) {
                 stock.Name.toLowerCase().includes(search.toLowerCase()) && (
                   <TouchableHighlight
                     key={i}
-                    onPress={() => handlePress(stock.Symbol)}
+                    onPress={() =>
+                      handlePress({ symbol: stock.Symbol, company: stock.Name })
+                    }
                   >
                     <ListItem
                       bottomDivider

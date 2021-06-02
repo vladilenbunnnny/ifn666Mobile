@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, StyleSheet, Dimensions, ActivityIndicator } from "react-native";
 import { Text, Button } from "react-native-elements";
 import { LineChart } from "react-native-chart-kit";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar as farFaStar } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import { AuthContext } from "../contexts/AuthContext";
+
 library.add(farFaStar);
 
 function StockDetail({ route, navigation }) {
@@ -16,6 +18,7 @@ function StockDetail({ route, navigation }) {
   const [high, setHigh] = useState("");
   const [isLoading, setLoading] = useState(true);
 
+  const { user } = useContext(AuthContext);
   //Variables for the chart X and Y axes
   const labelsChart = Object.values(date)
     .slice(0, 14)
@@ -23,7 +26,34 @@ function StockDetail({ route, navigation }) {
     .reverse();
   const prices = Object.values(close).slice(0, 14);
 
-  const { symbol } = route.params;
+  const { symbol, company } = route.params;
+  // console.log("token", user.token);
+  const handlePress = async () => {
+    let status;
+    fetch("http://localhost:5000/watchlist", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({ symbol, company, userId: user.id }),
+    })
+      .then(res => {
+        // console.log(res);
+        status = res.status;
+        return res.json();
+      })
+      .then(data => {
+        if (String(status).match(/^[45]/)) {
+          console.log("what", data);
+          throw new Error(data.message);
+        } else {
+          console.log("here", data);
+          alert("Successfully added");
+        }
+      })
+      .catch(alert);
+  };
 
   useEffect(() => {
     fetch(
@@ -146,6 +176,7 @@ function StockDetail({ route, navigation }) {
               buttonStyle={styles.button1}
               titleStyle={styles.button}
               title="Add to WatchList"
+              onPress={handlePress}
               type="outline"
               icon={
                 <FontAwesomeIcon

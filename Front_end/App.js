@@ -104,7 +104,16 @@ export default function App() {
       </View>
     );
   }
-
+  // {
+  //   id: 1,
+  //   email: 'test@emaple.com',
+  //   watchlist: [
+  //     {
+  //       name: 'AAPL',
+  //       addedAt: '2021-06-02',
+  //     }
+  //   ]
+  // }
   return (
     <AuthContext.Provider
       value={{

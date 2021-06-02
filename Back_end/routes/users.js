@@ -6,6 +6,7 @@ const saltRounds = 10;
 /* GET users listing. */
 router.get("/", function (req, res) {
   req.db.query("SELECT id, email FROM users", (err, results, fields) => {
+    if (err) throw err;
     res.json(results);
   });
 });
@@ -22,6 +23,7 @@ router.post("/", (req, res, next) => {
       "INSERT INTO users (email, password) VALUES (?, ?)",
       [email, hash],
       (err, results, fields) => {
+        if (err) throw err;
         res.status(201).json({ id: results.insertId, email });
       }
     );

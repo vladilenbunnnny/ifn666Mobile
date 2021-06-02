@@ -6,13 +6,12 @@ const router = express.Router();
 
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
-  console.log("email is ", email);
-  // TODO : do validation here...
-
+  // TODO: do validation here...
   req.db.query(
     "SELECT id, email, password FROM users WHERE email = ?",
     [email],
     (err, results, fields) => {
+      if (err) throw err;
       if (results.length === 0) {
         res.status(401).json({ message: "Invalid username and/or password." });
         return;
@@ -37,3 +36,6 @@ router.post("/login", (req, res) => {
 });
 
 module.exports = router;
+
+// auth/login -> { token: bla2343r4dfde4 }
+// watchlist/:user_id?page=0 -> [ { id: 1, symbol: 'APPL', company: " bla bla" ]
