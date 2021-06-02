@@ -16,6 +16,7 @@ function LogIn({ navigation }) {
 
   //<Handle all submits> START
   function handleSubmit(userEmail, password) {
+    console.log(password.replace(/\s+/g, "").trim());
     let status;
     fetch("http://localhost:5000/auth/login", {
       method: "POST",
@@ -91,7 +92,9 @@ function LogIn({ navigation }) {
       <Input
         containerStyle={styles.inputFields}
         placeholder="Email"
-        onChangeText={val => handleEmailChange(val)}
+        onChangeText={val =>
+          handleEmailChange(val.replace(/\s+/g, "").trim().toLowerCase())
+        }
         onEndEditing={e => handleValidUser(e.nativeEvent.text)}
       />
       {/* Contiionatl statement for error message */}
@@ -101,7 +104,9 @@ function LogIn({ navigation }) {
       <Input
         containerStyle={styles.inputFields}
         placeholder="Password"
-        onChangeText={val => handlePasswordChange(val)}
+        onChangeText={val =>
+          handlePasswordChange(val.replace(/\s+/g, "").trim())
+        }
         onEndEditing={e => handleValidPassword(e.nativeEvent.text)}
         secureTextEntry={true}
       />

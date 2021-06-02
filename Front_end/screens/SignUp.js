@@ -13,7 +13,7 @@ function SignUp({ navigation }) {
     validPassword2: true,
   });
 
-  // const { signUp } = useContext(AuthContext);
+  // const handleChangeEmail = val =>
 
   // < Validation if the field is empty> START
   const handleValidEmail = val => {
@@ -33,48 +33,55 @@ function SignUp({ navigation }) {
       ? setIsValid({ ...isValid, validPassword2: false })
       : setIsValid({ ...isValid, validPassword2: true });
   };
-
   // < Validation if the field is empty> END
-  const handleSubmit = async () => {
-    // console.log(email, password);
-    // TODO: validation;
 
-    let status;
-    fetch("http://localhost:5000/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    })
-      .then(res => {
-        status = res.status;
-        return res.json();
+  const handleSubmit = async () => {
+    console.log(email, password);
+    const pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$/;
+
+    if (password.trim() !== password2.trim()) {
+      alert("Passwords do not match");
+    } else if (!pattern.test(email)) {
+      alert("email is incorrect");
+    } else {
+      let status;
+      fetch("http://localhost:5000/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
       })
-      .then(data => {
-        if (!String(status).match(/^[23]/)) {
-          throw new Error(data.message);
-        } else {
-          alert(`Account for ${data.email} has been successfully created!`);
-          navigation.navigate("Log In");
-        }
-      })
-      .catch(alert);
+        .then(res => {
+          status = res.status;
+          return res.json();
+        })
+        .then(data => {
+          if (!String(status).match(/^[23]/)) {
+            throw new Error(data.message);
+          } else {
+            alert(`Account for ${data.email} has been successfully created!`);
+            navigation.navigate("Log In");
+          }
+        })
+        .catch(alert);
+    }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Create you account</Text>
       <Input
-        // value={email}
-        onChangeText={setEmail}
+        onChangeText={val =>
+          setEmail(val.replace(/\s+/g, "").trim().toLowerCase())
+        }
         onEndEditing={e => handleValidEmail(e.nativeEvent.text)}
         containerStyle={styles.inputFields}
         placeholder="Email"
         errorMessage={!isValid.validEmail && "Email field can't be empty"}
       />
       <Input
-        onChangeText={setPassword}
+        onChangeText={val => setPassword(val.replace(/\s+/g, "").trim())}
         onEndEditing={e => handleValidPassword(e.nativeEvent.text)}
         containerStyle={styles.inputFields}
         placeholder="Password"
@@ -82,7 +89,7 @@ function SignUp({ navigation }) {
         errorMessage={!isValid.validPassword && "Password field can't be empty"}
       />
       <Input
-        onChangeText={setPassword2}
+        onChangeText={val => setPassword2(val.replace(/\s+/g, "").trim())}
         onEndEditing={e => handleValidPassword2(e.nativeEvent.text)}
         containerStyle={styles.inputFields}
         placeholder="Confirm Password"

@@ -12,7 +12,7 @@ function Profile({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Hello, {user.email}</Text>
+      <Text style={styles.text}>Hello, {user.email.split("@")[0]}</Text>
       <Button
         buttonStyle={styles.button1}
         titleStyle={styles.button}
