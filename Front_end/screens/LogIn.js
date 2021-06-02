@@ -113,12 +113,16 @@ function LogIn({ navigation }) {
       <Button
         title="Submit"
         type="clear"
+        buttonStyle={styles.button1}
+        titleStyle={styles.button}
         onPress={() => handleSubmit(data.userEmail, data.password)}
       />
-      <Text>Need an account?</Text>
+      <Text>Need an account </Text>
       <Button
         title="Create account"
         type="clear"
+        buttonStyle={styles.button1}
+        titleStyle={styles.button}
         onPress={() => navigation.navigate("Sign Up")}
       />
     </View>
@@ -150,5 +154,13 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: -15,
     paddingRight: 165,
+  },
+  button: {
+    color: "rgb(0, 147, 129)",
+    fontSize: 21,
+  },
+  button1: {
+    width: "100%",
+    color: "white",
   },
 });
