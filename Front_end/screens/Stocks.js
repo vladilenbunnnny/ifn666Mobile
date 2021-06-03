@@ -167,13 +167,6 @@ function Stocks({ navigation }) {
   );
 }
 
-/////https://reactnative.dev/docs/network
-// 1. create an endpoint on backend, that returns the list of stocks. (external api or own api)
-
-// /stocks -> [{symbol, date, b....}]
-
-// 2. store list of stocks with app in file.
-
 export default Stocks;
 
 const styles = StyleSheet.create({

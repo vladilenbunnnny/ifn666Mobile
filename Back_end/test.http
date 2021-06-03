@@ -13,3 +13,7 @@ Content-Type: application/json
 ### Search API
 
 GET https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=appl&apikey=process.env.STOCKS_API_KEY
+
+### Test API
+
+get https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AACQ&apikey=env.process.STOCKS_API_KEY

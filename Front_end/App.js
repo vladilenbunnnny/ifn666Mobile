@@ -22,9 +22,9 @@ import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import LogIn from "./screens/LogIn";
 import StockDetail from "./screens/StockDetail";
 import { AuthContext } from "./contexts/AuthContext";
+import { WatchListProvider } from "./contexts/WatchListContext";
 
 const Stack = createStackNavigator();
-// const isLoggedIn = true;
 
 const loginReducer = (prevState, action) => {
   switch (action.type) {
@@ -38,9 +38,6 @@ const loginReducer = (prevState, action) => {
 };
 
 export default function App() {
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [userToken, setUserToken] = useState(null);
-
   const scheme = useColorScheme();
 
   //<Global states and reducer>
@@ -104,16 +101,7 @@ export default function App() {
       </View>
     );
   }
-  // {
-  //   id: 1,
-  //   email: 'test@emaple.com',
-  //   watchlist: [
-  //     {
-  //       name: 'AAPL',
-  //       addedAt: '2021-06-02',
-  //     }
-  //   ]
-  // }
+
   return (
     <AuthContext.Provider
       value={{
@@ -124,16 +112,21 @@ export default function App() {
       <NavigationContainer theme={scheme === "dark" ? DarkTheme : DefaultTheme}>
         {/* If logged in the bottom tab navigator is shown */}
         {user ? (
-          <Stack.Navigator
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: "#009381",
-              },
-            }}
-          >
-            <Stack.Screen name="Stocks Mobile" component={BottomTabNavigator} />
-            <Stack.Screen name="Stock Detail" component={StockDetail} />
-          </Stack.Navigator>
+          <WatchListProvider>
+            <Stack.Navigator
+              screenOptions={{
+                headerStyle: {
+                  backgroundColor: "#009381",
+                },
+              }}
+            >
+              <Stack.Screen
+                name="Stocks Mobile"
+                component={BottomTabNavigator}
+              />
+              <Stack.Screen name="Stock Detail" component={StockDetail} />
+            </Stack.Navigator>
+          </WatchListProvider>
         ) : (
           <Stack.Navigator
             screenOptions={{
