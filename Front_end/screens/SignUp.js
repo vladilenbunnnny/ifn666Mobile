@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 import { Input, Button } from "react-native-elements";
+import { scaleSize } from "../constants/Layout";
 
 function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
@@ -101,7 +102,6 @@ function SignUp({ navigation }) {
       <Button
         title="Create"
         type="clear"
-        buttonStyle={styles.button1}
         titleStyle={styles.button}
         onPress={handleSubmit}
       />
@@ -119,18 +119,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   inputFields: {
-    maxWidth: "85%",
+    maxWidth: scaleSize(300),
   },
   titleText: {
-    fontSize: 30,
-    paddingBottom: 20,
+    fontSize: scaleSize(26),
+    paddingBottom: scaleSize(18),
   },
   button: {
     color: "rgb(0, 147, 129)",
-    fontSize: 21,
-  },
-  button1: {
-    width: "100%",
-    color: "white",
+    fontSize: scaleSize(20),
   },
 });

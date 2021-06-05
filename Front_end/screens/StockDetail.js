@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { View, StyleSheet, Dimensions, ActivityIndicator } from "react-native";
-import { Text, Button } from "react-native-elements";
+import { Text, Button, ButtonGroup } from "react-native-elements";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar as farFaStar } from "@fortawesome/free-solid-svg-icons";
 import { LineChart } from "react-native-chart-kit";
@@ -10,28 +10,67 @@ import { Table, Rows } from "react-native-table-component";
 ///Contexts
 import { AuthContext } from "../contexts/AuthContext";
 import { useWatchList } from "../contexts/WatchListContext";
+import { scaleSize } from "../constants/Layout";
 
 library.add(farFaStar);
 
-function StockDetail({ route, navigation }) {
+// function choose(val) {
+//   switch (val) {
+//     case 7:
+//       break;
+//     case 14:
+//       break;
+//     case 28:
+//       break;
+//     case 100:
+//       break;
+//     default:
+//   }
+// }
+
+function StockDetail({ route }) {
   const [state, setState] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [tableData, setTableData] = useState([
     ["Open", "", "Close", ""],
     ["Low", "", "High", ""],
   ]);
+  const [index, setIndex] = useState(1);
+
+  const buttons = [3, 7, 14, 20];
+  function updateIndex(index) {
+    setIndex(index);
+  }
 
   const { watchList, addToWatchList } = useWatchList();
 
   const { user } = useContext(AuthContext);
 
   //<Variables for the chart X and Y axes> START
-  const labelsChart = state
-    .slice(0, 14)
-    .map(el => el.date.slice(-2))
-    .reverse();
+  let initialLabels = state.map(el => el.date.slice(-2)).reverse();
+  let labelsChart = initialLabels.slice(-14);
 
-  const prices = state.slice(0, 14).map(el => el.close);
+  let initialPrices = state.map(el => el.close);
+  let prices = initialPrices.slice(0, 14);
+
+  if (index == 0) {
+    labelsChart = initialLabels.slice(-3);
+    prices = initialPrices.slice(0, 3);
+  }
+  if (index == 1) {
+    labelsChart = initialLabels.slice(-7);
+    prices = initialPrices.slice(0, 7);
+  }
+  if (index == 2) {
+    labelsChart = initialLabels.slice(-14);
+    prices = initialPrices.slice(0, 14);
+  }
+  if (index == 3) {
+    labelsChart = initialLabels.slice(-20);
+    prices = initialPrices.slice(0, 20);
+  }
+
+  let titleNumber = index;
 
   //</Variables for the chart X and Y axes> END
 
@@ -65,7 +104,7 @@ function StockDetail({ route, navigation }) {
       .finally(() => setLoading(false));
   }, []);
 
-  const stockInWatchList = watchList.find(stock => stock.symbol === symbol);
+  const stockInWatchList = watchList.find(stock => stock.symbol === symbol); //Function that looks for stock in watchlist and renders remove button if it is there
 
   return (
     <>
@@ -75,53 +114,30 @@ function StockDetail({ route, navigation }) {
         </View>
       ) : (
         <View style={styles.container}>
-          <View style={styles.containerText}>
+          <View style={styles.priceContainer}>
             <TitleComponent symbol={symbol} date={state[0].date} />
-
-            {/* <View
-              style={{
-                flexDirection: "row",
-                paddingLeft: "10%",
-                paddingRight: "10%",
-                paddingTop: "13%",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text style={styles.priceText} h4>
-                Open {Number(state[0].open).toFixed(2)} $
-              </Text>
-              <Text
-                style={{ paddingLeft: "20%", color: "rgb(172, 179, 173)" }}
-                h4
-              >
-                Close {Number(state[0].close).toFixed(2)} $
-              </Text>
-            </View> */}
-
-            {/* <View
-              style={{
-                flexDirection: "row",
-                paddingLeft: "10%",
-                paddingRight: "10%",
-                marginTop: "1%",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text style={styles.priceText} h4>
-                Low {Number(state[0].low).toFixed(2)} $
-              </Text>
-              <Text style={{ color: "rgb(172, 179, 173)" }} h4>
-                High {Number(state[0].high).toFixed(2)} $
-              </Text>
-            </View> */}
-
             <TableComponent tableData={tableData} />
           </View>
 
           <View style={styles.containerChart}>
             <Text style={styles.chartText} h3>
-              Price history for the last 14 days
+              Price history for the last {buttons[index]} days
             </Text>
+
+            <ButtonGroup
+              onPress={updateIndex}
+              selectedIndex={index}
+              buttons={buttons}
+              containerStyle={styles.buttonsFilter}
+              buttonStyle={{ color: "red" }}
+              buttonContainerStyle={{ color: "red" }}
+              innerBorderStyle={{ color: "rgb(0, 147, 129)" }}
+              style={{ color: "rgb(30, 32, 36)" }}
+              selectedButtonStyle={{
+                backgroundColor: "rgba(0, 147, 129, 0.9)",
+              }}
+            />
+
             <LineChartComponent labelsChart={labelsChart} prices={prices} />
             {stockInWatchList ? (
               <RemoveButton />
@@ -142,10 +158,10 @@ export default StockDetail;
 const TitleComponent = props => {
   return (
     <View>
-      <Text style={styles.detailsText} h3>
+      <Text style={styles.titleText} h3>
         Price for {props.symbol} on
       </Text>
-      <Text style={styles.detailsText} h3>
+      <Text style={styles.titleText} h3>
         {props.date}
       </Text>
     </View>
@@ -153,9 +169,13 @@ const TitleComponent = props => {
 };
 const TableComponent = props => {
   return (
-    <View>
-      <Table borderStyle={{ borderWidth: 2, borderColor: "#c8e1ff" }}>
-        <Rows data={props.tableData} textStyle={styles.text} />
+    <View style={styles.tableContainer}>
+      <Table>
+        <Rows
+          data={props.tableData}
+          textStyle={styles.text}
+          textStyle={styles.rowsText}
+        />
       </Table>
     </View>
   );
@@ -173,22 +193,15 @@ const LineChartComponent = props => {
         ],
       }}
       width={Dimensions.get("window").width} // from react-native
-      height={220}
+      height={scaleSize(200)}
       chartConfig={{
         backgroundColor: "black",
         backgroundGradientFrom: "#090909",
         backgroundGradientTo: "#191923",
         color: (opacity = 1) => `rgba(202, 255, 208, ${opacity})`,
-        style: {
-          borderRadius: 16,
-        },
       }}
       bezier
-      style={{
-        marginVertical: 8,
-        borderRadius: 16,
-        marginTop: "7%",
-      }}
+      style={styles.lineChart}
     />
   );
 };
@@ -229,46 +242,68 @@ const RemoveButton = props => {
 //</Local components> END
 
 const styles = StyleSheet.create({
+  //                                    Main screen container
   container: {
     flex: 1,
-    backgroundColor: "white",
-    paddingTop: 50,
+    // backgroundColor: "white",
+    paddingTop: scaleSize(50),
     backgroundColor: "rgb(40, 44, 52)",
   },
-  containerChart: {
-    paddingTop: "17%",
-    flex: 1,
-    // alignItems: "center",
-  },
-  detailsText: {
-    color: "rgb(172, 179, 173)",
-  },
-  priceText: {
-    color: "rgb(172, 179, 173)",
-  },
-
-  chartText: {
-    color: "rgb(172, 179, 173)",
-    fontFamily: "Arial",
-    paddingLeft: "4%",
-  },
-  containerText: {
-    paddingLeft: 15,
-  },
-
+  //                                     Loading spinner
   loadingContainer: {
+    //Loading spinner
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    color: "rgb(172, 179, 173)",
   },
+  //                                    Container with Title, date and table component
+  priceContainer: {
+    paddingLeft: scaleSize(15),
+    paddingRight: scaleSize(15),
+  },
+  titleText: {
+    color: "rgb(172, 179, 173)",
+  },
+  //                                      Buttons
   button: {
     color: "rgb(0, 147, 129)",
   },
   button1: {
-    width: "70%",
+    width: scaleSize(250),
     color: "white",
     backgroundColor: "rgb(40, 44, 52)",
     borderColor: "rgb(0, 147, 129)",
-    marginTop: 30,
+    marginTop: scaleSize(30),
+  },
+  //                                      Chart
+  lineChart: {
+    marginVertical: scaleSize(8),
+    borderRadius: scaleSize(16),
+  },
+  chartText: {
+    color: "rgb(172, 179, 173)",
+    fontFamily: "Arial",
+    paddingLeft: scaleSize(15),
+  },
+  containerChart: {
+    paddingTop: scaleSize(45),
+    flex: 1,
+    // alignItems: "center",
+  },
+  //                                      Table Component
+  tableContainer: {
+    paddingTop: scaleSize(25),
+  },
+  rowsText: {
+    margin: scaleSize(6),
+    fontSize: scaleSize(25),
+  },
+  buttonsFilter: {
+    height: scaleSize(25),
+    marginTop: scaleSize(10),
+    backgroundColor: "rgb(30, 34, 41)",
+    borderColor: "rgb(0, 147, 129)",
+    color: "red",
   },
 });

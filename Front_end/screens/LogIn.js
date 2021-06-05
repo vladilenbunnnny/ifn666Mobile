@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View, useColorScheme } from "react-native";
 import { Input, Button } from "react-native-elements";
+import { scaleSize } from "../constants/Layout";
 
 //Context import
 import { AuthContext } from "../contexts/AuthContext";
@@ -118,7 +119,6 @@ function LogIn({ navigation }) {
       <Button
         title="Submit"
         type="clear"
-        buttonStyle={styles.button1}
         titleStyle={styles.button}
         onPress={() => handleSubmit(data.userEmail, data.password)}
       />
@@ -126,7 +126,6 @@ function LogIn({ navigation }) {
       <Button
         title="Create account"
         type="clear"
-        buttonStyle={styles.button1}
         titleStyle={styles.button}
         onPress={() => navigation.navigate("Sign Up")}
       />
@@ -144,28 +143,24 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   inputFields: {
-    maxWidth: "85%",
+    maxWidth: scaleSize(300),
   },
   titleText: {
-    fontSize: 30,
-    paddingBottom: 20,
+    fontSize: scaleSize(28),
+    paddingBottom: scaleSize(18),
   },
   errorMsg1: {
     color: "red",
-    marginTop: -15,
-    paddingRight: 195,
+    marginTop: scaleSize(-15),
+    paddingRight: scaleSize(160),
   },
   errorMsg2: {
     color: "red",
-    marginTop: -15,
-    paddingRight: 165,
+    marginTop: scaleSize(-15),
+    paddingRight: scaleSize(135),
   },
   button: {
     color: "rgb(0, 147, 129)",
-    fontSize: 21,
-  },
-  button1: {
-    width: "100%",
-    color: "white",
+    fontSize: scaleSize(18),
   },
 });

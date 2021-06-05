@@ -17,3 +17,6 @@ GET https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=appl&apike
 ### Test API
 
 get https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AACQ&apikey=env.process.STOCKS_API_KEY
+
+### Delete later
+get https://www.alphavantage.co/query?function=OVERVIEW&symbol=ALCO&apikey=env.process.STOCKS_API_KEY
