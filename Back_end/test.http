@@ -12,11 +12,15 @@ Content-Type: application/json
 
 ### Search API
 
-GET https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=appl&apikey=process.env.STOCKS_API_KEY
+GET https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=appl&apikey=p
 
 ### Test API
 
 get https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AACQ&apikey=env.process.STOCKS_API_KEY
 
-### Delete later
-get https://www.alphavantage.co/query?function=OVERVIEW&symbol=ALCO&apikey=env.process.STOCKS_API_KEY
+
+
+###
+
+DELETE http://localhost:5000/watchlist/14
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZGVmeXRoZWZsb3dAZ21haWwuY29tIiwiaWF0IjoxNjIyOTczOTg4fQ.tF0E0_fOLogELsiJculTpYw2njoQ4czZX3poLN5Sc5k

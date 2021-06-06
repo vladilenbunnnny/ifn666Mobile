@@ -7,6 +7,7 @@ import { LineChart } from "react-native-chart-kit";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { Table, Rows } from "react-native-table-component";
 import { scaleSize } from "../constants/Layout";
+import { Styles } from "../constants/Styles";
 ///Contexts
 import { AuthContext } from "../contexts/AuthContext";
 import { useWatchList } from "../contexts/WatchListContext";
@@ -54,9 +55,9 @@ function StockDetail({ route }) {
     setIndex(index);
   }
 
-  const { watchList, addToWatchList } = useWatchList();
+  const { watchList, addToWatchList, removeFromWatchList } = useWatchList();
 
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
 
   //<Setting up variables for the chart X and Y axes> START
   let initialLabels = state.map(el => el.date.slice(-2)).reverse();
@@ -73,11 +74,19 @@ function StockDetail({ route }) {
   const { symbol, company } = route.params;
 
   useEffect(() => {
+    let status;
     fetch(
       `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${symbol}&apikey=env.process.STOCKS_API_KEY`
     )
-      .then(res => res.json())
+      .then(res => {
+        status = res.status;
+        return res.json();
+      })
       .then(data => {
+        if ("Note" in data) {
+          alert("The limit is 5 requests per minute");
+          return;
+        }
         const timeSeries = data["Time Series (Daily)"];
         const dates = Object.keys(timeSeries);
         const arr = dates.map(date => ({
@@ -90,10 +99,10 @@ function StockDetail({ route }) {
         setState(arr);
         const firstRow = tableData[0].slice();
         const secondRow = tableData[1].slice();
-        firstRow[1] = arr[0].open;
-        firstRow[3] = arr[0].close;
-        secondRow[1] = arr[1].low;
-        secondRow[3] = arr[1].high;
+        firstRow[1] = Number(arr[0].open).toFixed(2);
+        firstRow[3] = Number(arr[0].close).toFixed(2);
+        secondRow[1] = Number(arr[1].low).toFixed(2);
+        secondRow[3] = Number(arr[1].high).toFixed(2);
         setTableData([firstRow, secondRow]);
       })
       .catch(alert)
@@ -105,18 +114,18 @@ function StockDetail({ route }) {
   return (
     <>
       {isLoading ? (
-        <View style={styles.loadingContainer}>
+        <View style={Styles.loadingContainer}>
           <ActivityIndicator size="large" />
         </View>
-      ) : (
+      ) : state.length > 0 ? (
         <View style={styles.container}>
-          <View style={styles.priceContainer}>
+          <View style={Styles.priceContainer}>
             <TitleComponent symbol={symbol} date={state[0].date} />
             <TableComponent tableData={tableData} />
           </View>
 
-          <View style={styles.containerChart}>
-            <Text style={styles.chartText} h3>
+          <View style={Styles.containerChart}>
+            <Text style={Styles.chartText} h3>
               Price history for the last {buttons[index]} days
             </Text>
 
@@ -124,9 +133,7 @@ function StockDetail({ route }) {
               onPress={updateIndex}
               selectedIndex={index}
               buttons={buttons}
-              containerStyle={styles.buttonsFilter}
-              buttonStyle={{ color: "red" }}
-              buttonContainerStyle={{ color: "red" }}
+              containerStyle={Styles.buttonsFilter}
               innerBorderStyle={{ color: "rgb(0, 147, 129)" }}
               style={{ color: "rgb(30, 32, 36)" }}
               selectedButtonStyle={{
@@ -136,7 +143,11 @@ function StockDetail({ route }) {
 
             <LineChartComponent labelsChart={labelsChart} prices={prices} />
             {stockInWatchList ? (
-              <RemoveButton />
+              <RemoveButton
+                removeFromWatchList={() =>
+                  removeFromWatchList(stockInWatchList.id)
+                }
+              />
             ) : (
               <AddButton
                 addToWatchList={() => addToWatchList({ symbol, company })}
@@ -144,20 +155,22 @@ function StockDetail({ route }) {
             )}
           </View>
         </View>
+      ) : (
+        <Text>"There is no data for this stock"</Text>
       )}
     </>
   );
 }
 export default StockDetail;
 
-//<Local components> START
+///<Local components> START
 const TitleComponent = props => {
   return (
     <View>
-      <Text style={styles.titleText} h3>
+      <Text style={Styles.titleText} h3>
         Price for {props.symbol} on
       </Text>
-      <Text style={styles.titleText} h3>
+      <Text style={Styles.titleText} h3>
         {props.date}
       </Text>
     </View>
@@ -165,19 +178,16 @@ const TitleComponent = props => {
 };
 const TableComponent = props => {
   return (
-    <View style={styles.tableContainer}>
+    <View style={Styles.tableContainer}>
       <Table>
-        <Rows
-          data={props.tableData}
-          textStyle={styles.text}
-          textStyle={styles.rowsText}
-        />
+        <Rows data={props.tableData} textStyle={Styles.rowsText} />
       </Table>
     </View>
   );
 };
 
 const LineChartComponent = props => {
+  console.log("LINECHARTCOMPONENT PROPS", props);
   return (
     <LineChart
       data={{
@@ -197,7 +207,7 @@ const LineChartComponent = props => {
         color: (opacity = 1) => `rgba(202, 255, 208, ${opacity})`,
       }}
       bezier
-      style={styles.lineChart}
+      style={Styles.lineChart}
     />
   );
 };
@@ -206,8 +216,8 @@ const AddButton = props => {
   return (
     <Button
       style={{ alignItems: "center" }}
-      buttonStyle={styles.button1}
-      titleStyle={styles.button}
+      buttonStyle={Styles.button1}
+      titleStyle={Styles.button}
       title="Add to WatchList"
       onPress={() => props.addToWatchList()}
       type="outline"
@@ -228,79 +238,21 @@ const RemoveButton = props => {
   return (
     <Button
       style={{ alignItems: "center" }}
-      buttonStyle={styles.button1}
-      titleStyle={styles.button}
+      buttonStyle={Styles.button1}
+      titleStyle={Styles.button}
       title="Remove from watchlist"
       type="outline"
+      onPress={() => props.removeFromWatchList()}
     />
   );
 };
 //</Local components> END
 
 const styles = StyleSheet.create({
-  //                                    Main screen container
+  // Main screen container
   container: {
     flex: 1,
-    // backgroundColor: "white",
     paddingTop: scaleSize(50),
     backgroundColor: "rgb(40, 44, 52)",
-  },
-  //                                     Loading spinner
-  loadingContainer: {
-    //Loading spinner
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    color: "rgb(172, 179, 173)",
-  },
-  //                                    Container with Title, date and table component
-  priceContainer: {
-    paddingLeft: scaleSize(15),
-    paddingRight: scaleSize(15),
-  },
-  titleText: {
-    color: "rgb(172, 179, 173)",
-  },
-  //                                      Buttons
-  button: {
-    color: "rgb(0, 147, 129)",
-  },
-  button1: {
-    width: scaleSize(250),
-    color: "white",
-    backgroundColor: "rgb(40, 44, 52)",
-    borderColor: "rgb(0, 147, 129)",
-    marginTop: scaleSize(30),
-  },
-  //                                      Chart
-  lineChart: {
-    marginVertical: scaleSize(8),
-    borderRadius: scaleSize(16),
-  },
-  chartText: {
-    color: "rgb(172, 179, 173)",
-    fontFamily: "Arial",
-    paddingLeft: scaleSize(15),
-  },
-  containerChart: {
-    paddingTop: scaleSize(45),
-    flex: 1,
-    // alignItems: "center",
-  },
-  //                                      Table Component
-  tableContainer: {
-    paddingTop: scaleSize(25),
-  },
-  rowsText: {
-    margin: scaleSize(6),
-    fontSize: scaleSize(22),
-    color: "white",
-  },
-  buttonsFilter: {
-    height: scaleSize(25),
-    marginTop: scaleSize(10),
-    backgroundColor: "rgb(30, 34, 41)",
-    borderColor: "rgb(0, 147, 129)",
-    color: "red",
   },
 });

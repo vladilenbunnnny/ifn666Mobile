@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 import { Input, Button } from "react-native-elements";
-import { scaleSize } from "../constants/Layout";
+import { StylesAuth } from "../constants/Styles";
 
 function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
@@ -70,21 +70,21 @@ function SignUp({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.titleText}>Create you account</Text>
+    <View style={StylesAuth.container}>
+      <Text style={StylesAuth.titleText}>Create you account</Text>
       <Input
         onChangeText={val =>
           setEmail(val.replace(/\s+/g, "").trim().toLowerCase())
         }
         onEndEditing={e => handleValidEmail(e.nativeEvent.text)}
-        containerStyle={styles.inputFields}
+        containerStyle={StylesAuth.inputFields}
         placeholder="Email"
         errorMessage={!isValid.validEmail && "Email field can't be empty"}
       />
       <Input
         onChangeText={val => setPassword(val.replace(/\s+/g, "").trim())}
         onEndEditing={e => handleValidPassword(e.nativeEvent.text)}
-        containerStyle={styles.inputFields}
+        containerStyle={StylesAuth.inputFields}
         placeholder="Password"
         secureTextEntry={true}
         errorMessage={!isValid.validPassword && "Password field can't be empty"}
@@ -92,7 +92,7 @@ function SignUp({ navigation }) {
       <Input
         onChangeText={val => setPassword2(val.replace(/\s+/g, "").trim())}
         onEndEditing={e => handleValidPassword2(e.nativeEvent.text)}
-        containerStyle={styles.inputFields}
+        containerStyle={StylesAuth.inputFields}
         placeholder="Confirm Password"
         secureTextEntry={true}
         errorMessage={
@@ -102,7 +102,7 @@ function SignUp({ navigation }) {
       <Button
         title="Create"
         type="clear"
-        titleStyle={styles.button}
+        titleStyle={StylesAuth.button}
         onPress={handleSubmit}
       />
     </View>
@@ -110,23 +110,3 @@ function SignUp({ navigation }) {
 }
 
 export default SignUp;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputFields: {
-    maxWidth: scaleSize(300),
-  },
-  titleText: {
-    fontSize: scaleSize(26),
-    paddingBottom: scaleSize(18),
-  },
-  button: {
-    color: "rgb(0, 147, 129)",
-    fontSize: scaleSize(20),
-  },
-});

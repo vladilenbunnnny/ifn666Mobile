@@ -42,8 +42,30 @@ export const useWatchList = () => {
       .catch(alert);
   }
 
-  function removeFromWatchList() {
-    // FixMe
+  function removeFromWatchList(stockId) {
+    let status;
+    fetch(`http://localhost:5000/watchlist/${stockId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+      .then(res => {
+        status = res.status;
+        if (!res.ok) {
+          return res.json();
+        }
+      })
+      .then(data => {
+        // console.log("data", data, "status", status);
+        if (String(status).match(/^[45]/)) {
+          throw new Error(data.message);
+        } else {
+          setWatchList(prev => prev.filter(stock => stock.id !== stockId));
+          alert("Successfully deleted");
+        }
+      })
+      .catch(alert);
   }
 
   useEffect(() => {
@@ -61,6 +83,7 @@ export const useWatchList = () => {
   return {
     watchList,
     addToWatchList,
+    removeFromWatchList,
   };
 };
 

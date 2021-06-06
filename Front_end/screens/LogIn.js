@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
-import { StyleSheet, Text, View, useColorScheme } from "react-native";
+import { Text, View } from "react-native";
 import { Input, Button } from "react-native-elements";
-import { scaleSize } from "../constants/Layout";
+import { StylesAuth } from "../constants/Styles";
 
 //Context import
 import { AuthContext } from "../contexts/AuthContext";
@@ -87,11 +87,11 @@ function LogIn({ navigation }) {
   //<Handle input validation/> END
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.titleText}>Log In</Text>
+    <View style={StylesAuth.container}>
+      <Text style={StylesAuth.titleText}>Log In</Text>
 
       <Input
-        containerStyle={styles.inputFields}
+        containerStyle={StylesAuth.inputFields}
         placeholder="Email"
         onChangeText={val =>
           handleEmailChange(val.replace(/\s+/g, "").trim().toLowerCase())
@@ -100,10 +100,10 @@ function LogIn({ navigation }) {
       />
       {/* Contiionatl statement for error message */}
       {!data.isValidUser && (
-        <Text style={styles.errorMsg1}>Email can't be empty</Text>
+        <Text style={StylesAuth.errorMsg1}>Email can't be empty</Text>
       )}
       <Input
-        containerStyle={styles.inputFields}
+        containerStyle={StylesAuth.inputFields}
         placeholder="Password"
         onChangeText={val =>
           handlePasswordChange(val.replace(/\s+/g, "").trim())
@@ -113,20 +113,20 @@ function LogIn({ navigation }) {
       />
       {/* Contiionatl statement for error message */}
       {!data.isValidPassword && (
-        <Text style={styles.errorMsg2}>Password can't be empty</Text>
+        <Text style={StylesAuth.errorMsg2}>Password can't be empty</Text>
       )}
 
       <Button
         title="Submit"
         type="clear"
-        titleStyle={styles.button}
+        titleStyle={StylesAuth.button}
         onPress={() => handleSubmit(data.userEmail, data.password)}
       />
-      <Text>Need an account </Text>
+      <Text>Need an account ?</Text>
       <Button
         title="Create account"
         type="clear"
-        titleStyle={styles.button}
+        titleStyle={StylesAuth.button}
         onPress={() => navigation.navigate("Sign Up")}
       />
     </View>
@@ -134,33 +134,3 @@ function LogIn({ navigation }) {
 }
 
 export default LogIn;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-  },
-  inputFields: {
-    maxWidth: scaleSize(300),
-  },
-  titleText: {
-    fontSize: scaleSize(28),
-    paddingBottom: scaleSize(18),
-  },
-  errorMsg1: {
-    color: "red",
-    marginTop: scaleSize(-15),
-    paddingRight: scaleSize(160),
-  },
-  errorMsg2: {
-    color: "red",
-    marginTop: scaleSize(-15),
-    paddingRight: scaleSize(135),
-  },
-  button: {
-    color: "rgb(0, 147, 129)",
-    fontSize: scaleSize(18),
-  },
-});
