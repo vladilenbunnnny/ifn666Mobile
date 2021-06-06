@@ -5,28 +5,40 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar as farFaStar } from "@fortawesome/free-solid-svg-icons";
 import { LineChart } from "react-native-chart-kit";
 import { library } from "@fortawesome/fontawesome-svg-core";
-
 import { Table, Rows } from "react-native-table-component";
+import { scaleSize } from "../constants/Layout";
 ///Contexts
 import { AuthContext } from "../contexts/AuthContext";
 import { useWatchList } from "../contexts/WatchListContext";
-import { scaleSize } from "../constants/Layout";
 
 library.add(farFaStar);
 
-// function choose(val) {
-//   switch (val) {
-//     case 7:
-//       break;
-//     case 14:
-//       break;
-//     case 28:
-//       break;
-//     case 100:
-//       break;
-//     default:
-//   }
-// }
+//<My local functions> START
+function defineIndex(index, initialLabels, initialPrices) {
+  let labelsChart = "";
+  let prices = "";
+  if (index == 0) {
+    labelsChart = initialLabels.slice(-3);
+    prices = initialPrices.slice(0, 3);
+    return { labelsChart, prices };
+  }
+  if (index == 1) {
+    labelsChart = initialLabels.slice(-7);
+    prices = initialPrices.slice(0, 7);
+    return { labelsChart, prices };
+  }
+  if (index == 2) {
+    labelsChart = initialLabels.slice(-14);
+    prices = initialPrices.slice(0, 14);
+    return { labelsChart, prices };
+  }
+  if (index == 3) {
+    labelsChart = initialLabels.slice(-20);
+    prices = initialPrices.slice(0, 20);
+    return { labelsChart, prices };
+  }
+}
+//</My local functions> END
 
 function StockDetail({ route }) {
   const [state, setState] = useState([]);
@@ -46,33 +58,17 @@ function StockDetail({ route }) {
 
   const { user } = useContext(AuthContext);
 
-  //<Variables for the chart X and Y axes> START
+  //<Setting up variables for the chart X and Y axes> START
   let initialLabels = state.map(el => el.date.slice(-2)).reverse();
-  let labelsChart = initialLabels.slice(-14);
-
   let initialPrices = state.map(el => el.close);
-  let prices = initialPrices.slice(0, 14);
 
-  if (index == 0) {
-    labelsChart = initialLabels.slice(-3);
-    prices = initialPrices.slice(0, 3);
-  }
-  if (index == 1) {
-    labelsChart = initialLabels.slice(-7);
-    prices = initialPrices.slice(0, 7);
-  }
-  if (index == 2) {
-    labelsChart = initialLabels.slice(-14);
-    prices = initialPrices.slice(0, 14);
-  }
-  if (index == 3) {
-    labelsChart = initialLabels.slice(-20);
-    prices = initialPrices.slice(0, 20);
-  }
+  const { labelsChart, prices } = defineIndex(
+    index,
+    initialLabels,
+    initialPrices
+  );
 
-  let titleNumber = index;
-
-  //</Variables for the chart X and Y axes> END
+  //</Setting up variables for the chart X and Y axes> END
 
   const { symbol, company } = route.params;
 
@@ -297,7 +293,8 @@ const styles = StyleSheet.create({
   },
   rowsText: {
     margin: scaleSize(6),
-    fontSize: scaleSize(25),
+    fontSize: scaleSize(22),
+    color: "white",
   },
   buttonsFilter: {
     height: scaleSize(25),
