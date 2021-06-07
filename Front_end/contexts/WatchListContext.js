@@ -1,10 +1,19 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
 import { SERVER_HOSTNAME } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const WatchListContext = React.createContext();
 
 export const WatchListProvider = ({ children }) => {
-  const [watchList, setWatchList] = useState([]);
+  const [watchList, setWatchList] = useState(async () => {
+    try {
+      const watchList = await AsyncStorage.getItem("watchList");
+      if (!watchList) return [];
+      return JSON.parse(watchList);
+    } catch (e) {
+      return [];
+    }
+  });
 
   return (
     <WatchListContext.Provider value={useState([])}>
@@ -34,10 +43,9 @@ export const useWatchList = () => {
       .then(data => {
         if (String(status).match(/^[45]/)) {
           throw new Error(data.message);
-        } else {
-          setWatchList(prev => [...prev, { id: data.id, symbol, company }]);
-          alert("Successfully added");
         }
+        setWatchList(prev => [...prev, { id: data.id, symbol, company }]);
+        alert("Successfully added");
       })
       .catch(alert);
   }
@@ -77,8 +85,20 @@ export const useWatchList = () => {
       },
     })
       .then(res => res.json())
-      .then(setWatchList);
+      .then(setWatchList)
+      .catch(alert);
   }, [user.id, user.token]);
+
+  useEffect(() => {
+    async function syncAsyncStorage() {
+      try {
+        await AsyncStorage.setItem("watchList", JSON.stringify(watchList));
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+    syncAsyncStorage();
+  }, [watchList.length]);
 
   return {
     watchList,

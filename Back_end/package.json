@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "db:create": "mysql < cool-script-that-creates-our-database-no-matter-how-it-is-named.sql"
+    "db:create": "mysql < create_db_script.sql"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

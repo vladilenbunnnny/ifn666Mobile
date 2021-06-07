@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { View, Text } from "react-native";
-import { AuthContext } from "../contexts/AuthContext";
 import { Input, Button } from "react-native-elements";
 import { StylesAuth } from "../constants/Styles";
 import { SERVER_HOSTNAME } from "@env";

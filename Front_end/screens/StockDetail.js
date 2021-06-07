@@ -276,8 +276,7 @@ const LineChartComponent = props => {
 const AddButton = props => {
   return (
     <Button
-      // style={{ marginLeft: 30 }}
-      buttonStyle={Styles.button1}
+      buttonStyle={Styles.buttonAdd}
       titleStyle={Styles.button}
       title="Add to WatchList"
       onPress={() => props.addToWatchList()}
@@ -298,8 +297,7 @@ const AddButton = props => {
 const RemoveButton = props => {
   return (
     <Button
-      style={{ alignItems: "center" }}
-      buttonStyle={Styles.button2}
+      buttonStyle={Styles.buttonRemove}
       titleStyle={Styles.button}
       title="Remove from watchlist"
       type="outline"

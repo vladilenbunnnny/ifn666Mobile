@@ -27,19 +27,19 @@ export const Styles = StyleSheet.create({
   button: {
     color: "rgb(0, 147, 129)",
   },
-  button1: {
+  buttonAdd: {
     width: scaleSize(250),
     backgroundColor: "rgb(40, 44, 52)",
     borderColor: "rgb(0, 147, 129)",
     marginTop: scaleSize(30),
     marginLeft: scaleSize(60),
   },
-  button2: {
+  buttonRemove: {
     width: scaleSize(250),
     backgroundColor: "rgb(40, 44, 52)",
     borderColor: "rgb(0, 147, 129)",
     marginTop: scaleSize(30),
-    marginLeft: scaleSize(10),
+    marginLeft: scaleSize(60),
   },
   //                                      Chart
   lineChart: {
