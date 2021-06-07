@@ -6,11 +6,20 @@ const router = express.Router();
 
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
-  // TODO: do validation here...
+
+  if (email === "") {
+    return res.status(400).json({ message: "email field is required." });
+  }
+
+  if (password === "") {
+    return res.status(400).json({ message: "password field is required." });
+  }
+
   req.db.query(
     "SELECT id, email, password FROM users WHERE email = ?",
     [email],
     (err, results, fields) => {
+      console.log(results);
       if (err) throw err;
       if (results.length === 0) {
         res.status(401).json({ message: "Invalid username and/or password." });
@@ -18,6 +27,7 @@ router.post("/login", (req, res) => {
       }
       const { password: userPassword, ...user } = results[0];
       bcrypt.compare(password, userPassword, (err, matched) => {
+        if (err) throw err;
         if (!matched) {
           res
             .status(401)
@@ -36,6 +46,3 @@ router.post("/login", (req, res) => {
 });
 
 module.exports = router;
-
-// auth/login -> { token: bla2343r4dfde4 }
-// watchlist/:user_id?page=0 -> [ { id: 1, symbol: 'APPL', company: " bla bla" ]

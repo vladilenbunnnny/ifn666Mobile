@@ -29,10 +29,17 @@ export const Styles = StyleSheet.create({
   },
   button1: {
     width: scaleSize(250),
-    color: "white",
     backgroundColor: "rgb(40, 44, 52)",
     borderColor: "rgb(0, 147, 129)",
     marginTop: scaleSize(30),
+    marginLeft: scaleSize(60),
+  },
+  button2: {
+    width: scaleSize(250),
+    backgroundColor: "rgb(40, 44, 52)",
+    borderColor: "rgb(0, 147, 129)",
+    marginTop: scaleSize(30),
+    marginLeft: scaleSize(10),
   },
   //                                      Chart
   lineChart: {
@@ -45,12 +52,12 @@ export const Styles = StyleSheet.create({
     paddingLeft: scaleSize(15),
   },
   containerChart: {
-    paddingTop: scaleSize(45),
+    paddingTop: scaleSize(30),
     flex: 1,
   },
   //                                      Table Component
   tableContainer: {
-    paddingTop: scaleSize(25),
+    paddingTop: scaleSize(15),
   },
   rowsText: {
     margin: scaleSize(6),
@@ -63,6 +70,15 @@ export const Styles = StyleSheet.create({
     backgroundColor: "rgb(30, 34, 41)",
     borderColor: "rgb(0, 147, 129)",
     color: "red",
+  },
+  limitRequestText: {
+    color: "rgb(0, 147, 129)",
+  },
+  limitRequestContainer: {
+    backgroundColor: "rgb(40, 44, 52)",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

@@ -8,11 +8,30 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { Table, Rows } from "react-native-table-component";
 import { scaleSize } from "../constants/Layout";
 import { Styles } from "../constants/Styles";
+
 ///Contexts
 import { AuthContext } from "../contexts/AuthContext";
 import { useWatchList } from "../contexts/WatchListContext";
 
 library.add(farFaStar);
+
+function defineDifference(state) {
+  if (state.length == 0) {
+    return {};
+  }
+
+  let todayClose = Number(state[0]["close"]);
+  let todayOpen = Number(state[0]["open"]);
+  let priceDif = (todayClose - todayOpen).toFixed(2);
+  let result;
+
+  if (priceDif > 0) {
+    result = ((priceDif / todayOpen) * 100).toFixed(2);
+  } else {
+    result = (((todayOpen - todayClose) / todayOpen) * 100).toFixed(2);
+  }
+  return { priceDif, result };
+}
 
 //<My local functions> START
 function defineIndex(index, initialLabels, initialPrices) {
@@ -97,6 +116,7 @@ function StockDetail({ route }) {
           high: timeSeries[date]["2. high"],
         }));
         setState(arr);
+
         const firstRow = tableData[0].slice();
         const secondRow = tableData[1].slice();
         firstRow[1] = Number(arr[0].open).toFixed(2);
@@ -107,7 +127,9 @@ function StockDetail({ route }) {
       })
       .catch(alert)
       .finally(() => setLoading(false));
-  }, []);
+  }, [symbol]);
+
+  const { priceDif, result } = defineDifference(state);
 
   const stockInWatchList = watchList.find(stock => stock.symbol === symbol); //Function that looks for stock in watchlist and renders remove button if it is there
 
@@ -120,7 +142,12 @@ function StockDetail({ route }) {
       ) : state.length > 0 ? (
         <View style={styles.container}>
           <View style={Styles.priceContainer}>
-            <TitleComponent symbol={symbol} date={state[0].date} />
+            <TitleComponent
+              symbol={symbol}
+              date={state[0].date}
+              result={result}
+              priceDif={priceDif}
+            />
             <TableComponent tableData={tableData} />
           </View>
 
@@ -156,7 +183,11 @@ function StockDetail({ route }) {
           </View>
         </View>
       ) : (
-        <Text>"There is no data for this stock"</Text>
+        <View style={Styles.limitRequestContainer}>
+          <Text style={Styles.limitRequestText}>
+            "The limit is 5 requests per minute. Try again later"
+          </Text>
+        </View>
       )}
     </>
   );
@@ -170,9 +201,40 @@ const TitleComponent = props => {
       <Text style={Styles.titleText} h3>
         Price for {props.symbol} on
       </Text>
-      <Text style={Styles.titleText} h3>
-        {props.date}
-      </Text>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={Styles.titleText} h3>
+          {props.date}
+        </Text>
+        <View style={{ paddingLeft: scaleSize(95), flexDirection: "row" }}>
+          {props.priceDif > 0 ? (
+            <Text
+              style={{
+                fontSize: scaleSize(25),
+                color: props.priceDif > 0 ? "green" : "red",
+              }}
+            >
+              +
+            </Text>
+          ) : (
+            <Text
+              style={{
+                fontSize: scaleSize(25),
+                color: props.priceDif > 0 ? "green" : "red",
+              }}
+            >
+              -
+            </Text>
+          )}
+          <Text
+            style={{
+              fontSize: scaleSize(27),
+              color: props.priceDif > 0 ? "green" : "red",
+            }}
+          >
+            {props.result}%
+          </Text>
+        </View>
+      </View>
     </View>
   );
 };
@@ -187,7 +249,6 @@ const TableComponent = props => {
 };
 
 const LineChartComponent = props => {
-  console.log("LINECHARTCOMPONENT PROPS", props);
   return (
     <LineChart
       data={{
@@ -215,7 +276,7 @@ const LineChartComponent = props => {
 const AddButton = props => {
   return (
     <Button
-      style={{ alignItems: "center" }}
+      // style={{ marginLeft: 30 }}
       buttonStyle={Styles.button1}
       titleStyle={Styles.button}
       title="Add to WatchList"
@@ -238,7 +299,7 @@ const RemoveButton = props => {
   return (
     <Button
       style={{ alignItems: "center" }}
-      buttonStyle={Styles.button1}
+      buttonStyle={Styles.button2}
       titleStyle={Styles.button}
       title="Remove from watchlist"
       type="outline"
@@ -252,7 +313,7 @@ const styles = StyleSheet.create({
   // Main screen container
   container: {
     flex: 1,
-    paddingTop: scaleSize(50),
+    paddingTop: scaleSize(20),
     backgroundColor: "rgb(40, 44, 52)",
   },
 });

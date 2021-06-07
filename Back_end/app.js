@@ -11,10 +11,6 @@ const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
 const watchlistRouter = require("./routes/watchlist");
 
-//Knex
-// const options = require("./knexfile.js");
-// const knex = require("knex")(options);
-
 const app = express();
 
 // view engine setup
@@ -27,11 +23,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
-// app.use(function (req, res, next) {
-//   req.db = knex;
-//   next();
-// });
 
 // Router middleware
 app.use("/", indexRouter);

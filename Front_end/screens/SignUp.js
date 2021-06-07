@@ -3,6 +3,7 @@ import { View, Text } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 import { Input, Button } from "react-native-elements";
 import { StylesAuth } from "../constants/Styles";
+import { SERVER_HOSTNAME } from "@env";
 
 function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
@@ -46,7 +47,7 @@ function SignUp({ navigation }) {
       alert("email is incorrect");
     } else {
       let status;
-      fetch("http://localhost:5000/users", {
+      fetch(`http://${SERVER_HOSTNAME}:5000/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +72,7 @@ function SignUp({ navigation }) {
 
   return (
     <View style={StylesAuth.container}>
-      <Text style={StylesAuth.titleText}>Create you account</Text>
+      <Text style={StylesAuth.titleText}>Create your account</Text>
       <Input
         onChangeText={val =>
           setEmail(val.replace(/\s+/g, "").trim().toLowerCase())

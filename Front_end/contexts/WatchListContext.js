@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
-
+import { SERVER_HOSTNAME } from "@env";
 const WatchListContext = React.createContext();
 
 export const WatchListProvider = ({ children }) => {
@@ -19,7 +19,7 @@ export const useWatchList = () => {
 
   function addToWatchList({ symbol, company }) {
     let status;
-    fetch("http://localhost:5000/watchlist", {
+    fetch(`http://${SERVER_HOSTNAME}:5000/watchlist`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export const useWatchList = () => {
 
   function removeFromWatchList(stockId) {
     let status;
-    fetch(`http://localhost:5000/watchlist/${stockId}`, {
+    fetch(`http://${SERVER_HOSTNAME}:5000/watchlist/${stockId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -69,7 +69,7 @@ export const useWatchList = () => {
   }
 
   useEffect(() => {
-    fetch(`http://localhost:5000/watchlist/${user.id}`, {
+    fetch(`http://${SERVER_HOSTNAME}:5000/watchlist/${user.id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

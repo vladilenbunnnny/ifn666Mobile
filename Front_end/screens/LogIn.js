@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { Text, View } from "react-native";
 import { Input, Button } from "react-native-elements";
 import { StylesAuth } from "../constants/Styles";
+import { SERVER_HOSTNAME } from "@env";
 
 //Context import
 import { AuthContext } from "../contexts/AuthContext";
@@ -19,7 +20,7 @@ function LogIn({ navigation }) {
   function handleSubmit(userEmail, password) {
     console.log(password.replace(/\s+/g, "").trim());
     let status;
-    fetch("http://localhost:5000/auth/login", {
+    fetch(`http://${SERVER_HOSTNAME}:5000/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

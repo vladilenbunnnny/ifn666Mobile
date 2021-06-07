@@ -13,9 +13,39 @@ router.get("/", function (req, res) {
 
 router.post("/", (req, res, next) => {
   const { email, password } = req.body;
-  // TODO: do validation here...
-  if (email === "test@test.com") {
-    return res.status(400).send({ message: "This email is unavailable." });
+
+  if (email === "") {
+    return res.status(400).json({ message: "email field is required." });
+  }
+
+  if (
+    !email.match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    )
+  ) {
+    return res.status(400).json({ message: "invalid email address." });
+  }
+
+  req.db.query(
+    "SELECT id FROM users WHERE email = ?",
+    [email],
+    (err, results, fields) => {
+      if (results.length > 0) {
+        return res
+          .status(400)
+          .json({ message: "user with this email address already exists." });
+      }
+    }
+  );
+
+  if (password === "") {
+    return res.status(400).json({ message: "password field is required." });
+  }
+
+  if (password.length < 8) {
+    return res
+      .status(400)
+      .json({ message: "password must be at least 8 characters long." });
   }
 
   bcrypt.hash(password, saltRounds, (err, hash) => {

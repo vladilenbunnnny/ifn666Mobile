@@ -2,9 +2,12 @@ import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 import { Button } from "react-native-elements";
+import { scaleSize } from "../constants/Layout";
 
 function Profile({ navigation }) {
   const { user, logOut } = useContext(AuthContext);
+  const name = user.email.split("@")[0];
+  const nameUpper = name.charAt(0).toUpperCase() + name.slice(1);
 
   if (!user) {
     return null;
@@ -12,7 +15,7 @@ function Profile({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Hello, {user.email.split("@")[0]}</Text>
+      <Text style={styles.text}>Hello, {nameUpper}</Text>
       <Button
         buttonStyle={styles.button1}
         titleStyle={styles.button}
@@ -40,9 +43,11 @@ const styles = StyleSheet.create({
   },
   button: {
     color: "rgb(0, 147, 129)",
+    flex: 1,
+    textAlign: "center",
   },
   button1: {
-    width: "100%",
+    width: scaleSize(170),
     color: "white",
     backgroundColor: "rgb(40, 44, 52)",
     borderColor: "rgb(0, 147, 129)",

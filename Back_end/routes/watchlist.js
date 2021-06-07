@@ -7,7 +7,7 @@ router.get(
   jwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }),
   (req, res) => {
     const { userId } = req.params;
-    const { offset, limit = 21 } = req.query; // TODO: pagination.
+    const { offset, limit = 21 } = req.query;
 
     if (req.user.userId != userId) {
       return res.status(403).json({
@@ -39,12 +39,10 @@ router.post(
     if (!symbol) {
       return res.status(400).json({ message: "symbol field is required " });
     }
-    // TODO: check that symbol is valid (length, and it exists).
 
     if (!company) {
       return res.status(400).json({ message: "company field is required " });
     }
-    // TODO:  check that company is valid(length, and it exists).
 
     if (req.user.userId !== userId) {
       return res.status(403).json({
@@ -71,9 +69,6 @@ router.delete(
   jwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }),
   (req, res) => {
     const { stockId } = req.params;
-
-    //. fetch stock from db.
-    // id stock doesnt exist -> return 404
     req.db.query(
       "SELECT user_id FROM watchlist WHERE id = ?",
       [stockId],
@@ -84,7 +79,6 @@ router.delete(
         }
         console.log("results", results);
         const stock = results[0];
-        // console.log(req.user, stock);
         if (req.user.userId != stock.user_id) {
           return res.status(403).json({
             message: "You must be an owner the stock to perform this action. ",
@@ -102,14 +96,6 @@ router.delete(
         );
       }
     );
-
-    // check that user is owner of the stock
-    // if not -> return 403
-
-    // try to delte the stock
-    // iif delted- return 204.
-
-    // Fix
   }
 );
 

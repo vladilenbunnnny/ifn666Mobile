@@ -12,7 +12,6 @@ import { Styles } from "../constants/Styles";
 
 import { SearchBar, ListItem } from "react-native-elements";
 
-const image = { uri: "../assets/background.png " };
 //<Custom hook> START
 function useStocks({ search = "" }) {
   const [stocks, setStocks] = useState([]);
@@ -61,56 +60,55 @@ function Stocks({ navigation }) {
       <TouchableWithoutFeedback>
         <SearchBar
           containerStyle={styles.search}
-          placeholder="Type Here..."
+          placeholder="Search (demo app: 5 requests/minute)"
           onChangeText={setSearch}
           value={search}
         />
       </TouchableWithoutFeedback>
-      <ScrollView contentContainerStyle={Styles.loadingContainer}>
-        {isLoading ? (
-          <View>
-            <ActivityIndicator />
-          </View>
-        ) : error ? (
-          <Text>Error: {error.message}</Text>
-        ) : (
-          <>
-            {stocks.map((stock, i) => (
-              <TouchableHighlight
-                key={i}
-                onPress={() =>
-                  handlePress({
-                    symbol: stock["1. symbol"],
-                    company: stock["2. name"],
-                  })
-                }
+
+      {isLoading ? (
+        <View style={Styles.loadingContainer}>
+          <ActivityIndicator />
+        </View>
+      ) : error ? (
+        <Text>Error: {error.message}</Text>
+      ) : (
+        <ScrollView>
+          {stocks.map((stock, i) => (
+            <TouchableHighlight
+              key={i}
+              onPress={() =>
+                handlePress({
+                  symbol: stock["1. symbol"],
+                  company: stock["2. name"],
+                })
+              }
+            >
+              <ListItem
+                bottomDivider
+                containerStyle={{ backgroundColor: "rgb(40, 44, 52)" }}
               >
-                <ListItem
-                  bottomDivider
-                  containerStyle={{ backgroundColor: "rgb(40, 44, 52)" }}
-                >
-                  <ListItem.Content>
-                    <ListItem.Title
-                      style={{
-                        color: "rgb(172, 179, 173)",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {stock["1. symbol"]}
-                    </ListItem.Title>
-                    <ListItem.Subtitle style={{ color: "rgb(172, 179, 173)" }}>
-                      {stock["2. name"]}
-                    </ListItem.Subtitle>
-                    <ListItem.Subtitle style={{ color: "rgb(172, 179, 173)" }}>
-                      {stock["4. region"]}
-                    </ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
-              </TouchableHighlight>
-            ))}
-          </>
-        )}
-      </ScrollView>
+                <ListItem.Content>
+                  <ListItem.Title
+                    style={{
+                      color: "rgb(172, 179, 173)",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {stock["1. symbol"]}
+                  </ListItem.Title>
+                  <ListItem.Subtitle style={{ color: "rgb(172, 179, 173)" }}>
+                    {stock["2. name"]}
+                  </ListItem.Subtitle>
+                  <ListItem.Subtitle style={{ color: "rgb(172, 179, 173)" }}>
+                    {stock["4. region"]}
+                  </ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            </TouchableHighlight>
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -125,5 +123,4 @@ const styles = StyleSheet.create({
   search: {
     backgroundColor: "rgb(40, 44, 52)",
   },
-  image: {},
 });

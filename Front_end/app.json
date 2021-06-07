@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Client2",
-    "slug": "Client2",
+    "name": "ifn666KolesnikovVladilen",
+    "slug": "ifn666_kolesnikov_vladilen",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,6 +27,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": ""
   }
 }
