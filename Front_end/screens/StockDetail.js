@@ -185,7 +185,7 @@ function StockDetail({ route }) {
       ) : (
         <View style={Styles.limitRequestContainer}>
           <Text style={Styles.limitRequestText}>
-            "The limit is 5 requests per minute. Try again later"
+            The limit is 5 requests per minute. Try again later
           </Text>
         </View>
       )}
@@ -299,7 +299,7 @@ const RemoveButton = props => {
     <Button
       buttonStyle={Styles.buttonRemove}
       titleStyle={Styles.button}
-      title="Remove from watchlist"
+      title="Remove from WatchList"
       type="outline"
       onPress={() => props.removeFromWatchList()}
     />

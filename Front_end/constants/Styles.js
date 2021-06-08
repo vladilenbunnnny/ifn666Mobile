@@ -32,14 +32,14 @@ export const Styles = StyleSheet.create({
     backgroundColor: "rgb(40, 44, 52)",
     borderColor: "rgb(0, 147, 129)",
     marginTop: scaleSize(30),
-    marginLeft: scaleSize(60),
+    marginLeft: scaleSize(65),
   },
   buttonRemove: {
     width: scaleSize(250),
     backgroundColor: "rgb(40, 44, 52)",
     borderColor: "rgb(0, 147, 129)",
     marginTop: scaleSize(30),
-    marginLeft: scaleSize(60),
+    marginLeft: scaleSize(65),
   },
   //                                      Chart
   lineChart: {

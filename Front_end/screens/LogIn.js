@@ -18,7 +18,6 @@ function LogIn({ navigation }) {
 
   //<Handle all submits> START
   function handleSubmit(userEmail, password) {
-    console.log(password.replace(/\s+/g, "").trim());
     let status;
     fetch(`http://${SERVER_HOSTNAME}:5000/auth/login`, {
       method: "POST",
@@ -99,7 +98,7 @@ function LogIn({ navigation }) {
         }
         onEndEditing={e => handleValidUser(e.nativeEvent.text)}
       />
-      {/* Contiionatl statement for error message */}
+      {/* Conditional statement for error message */}
       {!data.isValidUser && (
         <Text style={StylesAuth.errorMsg1}>Email can't be empty</Text>
       )}

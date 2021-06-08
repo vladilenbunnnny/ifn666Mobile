@@ -24,7 +24,7 @@ function useStocks({ search = "" }) {
     }
     setIsLoading(true);
     fetch(
-      `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${search}&apikey=whatever`
+      `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${search}&apikey=env.process.STOCKS_API_KEY`
     )
       .then(res => res.json())
       .then(data => {
