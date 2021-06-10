@@ -44,6 +44,8 @@ function SignUp({ navigation }) {
       alert("Passwords do not match");
     } else if (!pattern.test(email)) {
       alert("email is incorrect");
+    } else if (password.length === 0) {
+      alert("password field is required");
     } else {
       let status;
       fetch(`http://${SERVER_HOSTNAME}:5000/users`, {

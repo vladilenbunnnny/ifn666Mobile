@@ -25,39 +25,34 @@ router.post("/", (req, res, next) => {
   ) {
     return res.status(400).json({ message: "invalid email address." });
   }
-
-  req.db.query(
-    "SELECT id FROM users WHERE email = ?",
-    [email],
-    (err, results, fields) => {
-      if (results.length > 0) {
-        return res
-          .status(400)
-          .json({ message: "user with this email address already exists." });
-      }
-    }
-  );
-
-  if (password === "") {
-    return res.status(400).json({ message: "password field is required." });
-  }
-
   if (password.length < 8) {
     return res
       .status(400)
       .json({ message: "password must be at least 8 characters long." });
   }
 
-  bcrypt.hash(password, saltRounds, (err, hash) => {
-    req.db.query(
-      "INSERT INTO users (email, password) VALUES (?, ?)",
-      [email, hash],
-      (err, results, fields) => {
-        if (err) throw err;
-        res.status(201).json({ id: results.insertId, email });
+  req.db.query(
+    "SELECT id FROM users WHERE email = ?",
+    [email],
+    (err, results, fields) => {
+      if (results.length > 0) {
+        res
+          .status(400)
+          .json({ message: "user with this email address already exists." });
+        return;
       }
-    );
-  });
+      bcrypt.hash(password, saltRounds, (err, hash) => {
+        req.db.query(
+          "INSERT INTO users (email, password) VALUES (?, ?)",
+          [email, hash],
+          (err, results, fields) => {
+            if (err) throw err;
+            res.status(201).json({ id: results.insertId, email });
+          }
+        );
+      });
+    }
+  );
 });
 
 module.exports = router;
